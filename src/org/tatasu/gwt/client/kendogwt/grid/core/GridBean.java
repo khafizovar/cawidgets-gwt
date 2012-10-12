@@ -14,5 +14,5 @@ public interface GridBean {
 	 * @param fieldName	Наименованеи поля.
 	 * @return
 	 */
-	public Object getValueByFieldname(String fieldName);
+	public Object getValueByFieldName(String fieldName);
 }
