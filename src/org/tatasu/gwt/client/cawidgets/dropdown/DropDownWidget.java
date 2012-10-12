@@ -68,13 +68,13 @@ public class DropDownWidget extends Widget{
 
 	@Override
 	protected void onLoad() {
-		createDropDownWidget(this, select.getId(), visRows, rowHeight,  width, height);
+		createDropDownWidget(this, selectId, visRows, rowHeight,  width, height);
 		super.onLoad();
 	}
 
 	@Override
 	protected void onUnload() {
-		destroyDropDownWidget(getElement().getId());
+		destroyDropDownWidget(selectId);
 		super.onUnload();
 	}
 	
