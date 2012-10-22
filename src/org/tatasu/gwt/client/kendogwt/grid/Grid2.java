@@ -84,6 +84,7 @@ public class Grid2 extends Widget{
 		options.put(GridOptionsEnum.Option.GROUPABLE.getName(), JSONBoolean.getInstance(false));
 		options.put(GridOptionsEnum.Option.SORTABLE.getName(), JSONBoolean.getInstance(true));
 		options.put(GridOptionsEnum.Option.PAGEABLE.getName(), JSONBoolean.getInstance(false));
+		options.put(GridOptionsEnum.Option.REORDERABLE.getName(), JSONBoolean.getInstance(true));
 		//options.put(GridOptionsEnum.Option.FILTERABLE.getName(), JSONBoolean.getInstance(true));
 		
 		ArrayList<String> columnNamesFromHashMap = GridHashMapParser.getKeysName(localData);		

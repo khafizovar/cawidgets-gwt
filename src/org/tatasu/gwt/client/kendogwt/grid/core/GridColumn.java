@@ -18,10 +18,10 @@ public class GridColumn {
 //	private String format;
 	
 	/**
-	 * 
-	 * @param field
-	 * @param title
-	 * @param width
+	 * Конструктор
+	 * @param field идентификатор поля с данными
+	 * @param title отображаемый в заголовке текст
+	 * @param width явно заданная ширина колонки 
 	 */
 	public GridColumn(String field, String title, int width) {
 		//super();
@@ -30,31 +30,16 @@ public class GridColumn {
 		this.width = width;
 	}
 
-
+	/**
+	 * Конструктор
+	 * @param field идентификатор поля с данными
+	 * @param title отображаемый в заголовке текст
+	 */
 	public GridColumn(String field, String title) {
 		//super();
 		this.field = field;
 		this.title = title;
 	}
-
-
-	public GridColumn( String title, String field, Integer width) {
-		/*public enum Column {			
-			FIELD("field"),
-	        TITLE("title"),
-	        WIDTH("width"),
-			TEMPLATE("template"),
-			FORMAT("format");
-			private String name;		
-			private Column(String name) {
-				this.name = name;
-			}		
-			public String getName() {
-				return this.name;
-			}
-		}*/		
-	}
-
 
 	/**
 	 * @return the field
