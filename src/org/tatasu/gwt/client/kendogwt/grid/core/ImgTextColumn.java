@@ -2,7 +2,8 @@ package org.tatasu.gwt.client.kendogwt.grid.core;
 
 public class ImgTextColumn extends GridColumn {
 	
-	private String imageTemplate= "<img src='#=data."+field+"#' alt='"+ field +"'/>";
+	//private String imageTemplate= "'#=data."+field+"#'";
+	private String imageTemplate= "#=data." + field + "#";
 	
 	public ImgTextColumn(String field, String title) {
 		super(field, title);
@@ -12,7 +13,7 @@ public class ImgTextColumn extends GridColumn {
 	}
 	public ImgTextColumn(String field, String title, int imageWidtPx, int imageHeightPx) {
 		super(field, title);
-		this.imageTemplate = "<img src='#=data."+field+"#' alt='"+ field +"' width='"+imageWidtPx+"' height='"+imageHeightPx+"'/>";
+		//this.imageTemplate = "<img src='#=data."+field+"#' alt='"+ field +"' width='"+imageWidtPx+"' height='"+imageHeightPx+"'/>";
 	}
 
 	/**

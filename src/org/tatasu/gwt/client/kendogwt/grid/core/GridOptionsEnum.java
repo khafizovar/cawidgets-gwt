@@ -5,14 +5,26 @@ public class GridOptionsEnum {
 	 * Опции объекта grid
 	 * @author HafizovAR
 	 */
-	public enum Option {		
-		SORTABLE("sortable"),
-        RESIZABLE("resizable"),
-        REORDERABLE("reorderable"),
+	public enum Option {
+		/**
+		 * Сделать отображение постраничным
+		 */
         PAGEABLE("pageable"),
+        /**
+         * Опции для датасурса, см enum DataSource
+         */
         DATASOURCE("dataSource"),
+        /**
+         * Массив с колонками, см enum Column
+         */
         COLUMNS("columns"),	
+        /**
+         * Группируемые
+         */
 		GROUPABLE("groupable"),
+		/**
+		 * Использовать фильтр
+		 */
 		FILTERABLE("filterable"),
 		SCROLLABLE("scrollable");
 		private String name;		
@@ -28,11 +40,42 @@ public class GridOptionsEnum {
 	 * @author HafizovAR
 	 */
 	public enum Column {			
+			/**
+			 * Опция идентификатор колонки, значение используется как ключ (для однозначной идентификации поля с данными) из HashMap, все пробелы из значения будут удалены
+			 */
 			FIELD("field"),
+			/**
+			 * Наименование столбца соответствуемого данному полю 
+			 */
 	        TITLE("title"),
+	        /**
+	         * Ширина колонки
+	         */
 	        WIDTH("width"),
+	        /**
+	         * Столбец сортрруемый
+	         */
+	        SORTABLE("sortable"),
+	        /**
+	         * Шаблон отображения
+	         */
 			TEMPLATE("template"),
-			FORMAT("format");
+			/**
+			 * Изменяемый размер
+			 */
+			RESIZABLE("resizable"),
+			/**
+			 * Колонка "с перетаскиванием"
+			 */
+	        REORDERABLE("reorderable"),
+	        /**
+	         * Формат значения
+	         */
+			FORMAT("format"),
+			/**
+			 * false - все содержимое будет восприниматься как html, false - данные внутри будут интерпретироваться как текст
+			 */
+			ENCODED("encoded");
 			private String name;		
 			private Column(String name) {
 				this.name = name;
@@ -45,8 +88,14 @@ public class GridOptionsEnum {
 	 * Опции объекта DataSource
 	 * @author HafizovAR
 	 */
-	public enum DataSource {			
+	public enum DataSource {
+		/**
+		 * Массив данных
+		 */
 		DATA("data"),
+		/**
+		 * Автоматическая установка данных, если false - необходимо принудительно вызывать .read() для установки данных
+		 */
 		AUTOBIND("autoBind");
 		private String name;		
 		private DataSource (String name) {

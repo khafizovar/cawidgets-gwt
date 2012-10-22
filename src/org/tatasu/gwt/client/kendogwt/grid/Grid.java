@@ -67,7 +67,7 @@ public class Grid<T extends GridBean> extends Widget{
 		JSONObject options = new JSONObject();		
 		//options.put(Option.GROUPABLE.getName(), new JSONString("false"));
 		options.put(GridOptionsEnum.Option.GROUPABLE.getName(), getPsevdoJsFalse());
-		options.put(GridOptionsEnum.Option.SORTABLE.getName(), getPsevdoJsFalse());
+		//options.put(GridOptionsEnum.Option.SORTABLE.getName(), getPsevdoJsFalse());
 		options.put(GridOptionsEnum.Option.PAGEABLE.getName(), getPsevdoJsFalse());
 		
 		//Колонки

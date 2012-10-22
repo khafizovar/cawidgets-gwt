@@ -1,5 +1,9 @@
 package org.tatasu.gwt.client.kendogwt.grid.items;
-
+/**
+ * Класс для помещения в ячейку 
+ * @author HafizovAR
+ *
+ */
 public class ImgTextCell {
 	private String imageUrl;
 	private String text;
@@ -9,7 +13,8 @@ public class ImgTextCell {
 		this.text = text;		
 	}
 	
-	public String  getHtmlTemplate() {
-		return "<div><img src='"+ imageUrl + "'>" + text + "</div>";
+	@Override
+	public String toString() {		
+		return "<img src='"+ imageUrl + "'/>" + text + "";
 	}
 }
