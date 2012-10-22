@@ -31,6 +31,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 
 /**
+ * На данный момент не рекомендуется к использованию
  * Класс виджета таблицы с примочками, для нередактируемых данных
  * 
  * @author HafizovAR
@@ -175,7 +176,7 @@ public class FishCompleteCellTable<T extends BeanCore> extends Composite {
 							SafeHtmlBuilder builder = new SafeHtmlBuilder();
 							String cellBgColorStyle = null;
 							if(object.getRGBAStringForCell(field) != null) {
-								cellBgColorStyle= "background: "+ object.getRGBAStringForCell(field) +"; border:solid; border-width:1px; -moz-border-radius: 5px;  -webkit-border-radius: 5px;  border-radius: 5px;";
+								cellBgColorStyle= "background: "+ object.getRGBAStringForCell(field) +"; border:solid; border-width:0px; -moz-border-radius: 5px;  -webkit-border-radius: 5px;  border-radius: 5px;";
 							}
 							
 							if(object.checkingForLice(field)) {
