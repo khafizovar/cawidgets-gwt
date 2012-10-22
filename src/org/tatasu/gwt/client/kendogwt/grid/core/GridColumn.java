@@ -1,5 +1,9 @@
 package org.tatasu.gwt.client.kendogwt.grid.core;
-
+/**
+ * Класс колонки используемый для создания объектов Колонок
+ * @author HafizovAR
+ *
+ */
 public class GridColumn {
 	/** Используемое поле */
 	protected String field;
@@ -13,7 +17,12 @@ public class GridColumn {
 //	private String template;	
 //	private String format;
 	
-	
+	/**
+	 * 
+	 * @param field
+	 * @param title
+	 * @param width
+	 */
 	public GridColumn(String field, String title, int width) {
 		//super();
 		this.field = field.replaceAll(" ", "");

@@ -2,7 +2,8 @@ package org.tatasu.gwt.client.kendogwt.grid.core;
 
 /**
  * Колонка с изображением, изображение формируется на базе темплейта, поразумевается что ссылка на изображение 
- * содержится в самом поле. 
+ * содержится в самом поле. НЕ использовать encoded = false
+ * TODO сделать эту опцию автоотключаемой при использовании этого класса.
  * @author HafizovAR
  */
 public class ImageColumn extends GridColumn {

@@ -1,5 +1,13 @@
 package org.tatasu.gwt.client.kendogwt.grid.core;
 
+/**
+ * Колонка для отображения текста + иконка. Использовать совместно с ImgTextCell в источнике данных ArrayList<HashMap<String, Object>> 
+ * для конкретного значения Object. НЕ использовать совместно с опцией encoded=false;
+ * TODO - сделать опциию автоотключаемой при использован6ии этого класса
+ *  
+ * @author HafizovAR
+ *
+ */
 public class ImgTextColumn extends GridColumn {
 	
 	//private String imageTemplate= "'#=data."+field+"#'";

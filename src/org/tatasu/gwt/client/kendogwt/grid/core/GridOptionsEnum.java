@@ -26,7 +26,18 @@ public class GridOptionsEnum {
 		 * Использовать фильтр
 		 */
 		FILTERABLE("filterable"),
-		SCROLLABLE("scrollable");
+		/**
+		 * Разрешает/запрещает использование скроллов
+		 */
+		SCROLLABLE("scrollable"),
+		/**
+		 * Разрешить сортировку
+		 */
+		SORTABLE("sortable"),
+		/**
+		 * Позволяет перетаскиванием изменять порядок столбцов
+		 */
+		REORDERABLE("reorderable");
 		private String name;		
 		private Option(String name) {
 			this.name = name;
@@ -75,7 +86,11 @@ public class GridOptionsEnum {
 			/**
 			 * false - все содержимое будет восприниматься как html, false - данные внутри будут интерпретироваться как текст
 			 */
-			ENCODED("encoded");
+			ENCODED("encoded"),
+			/**
+			 * Столбец использует фильтры
+			 */
+			FILTERABLE("filterable");
 			private String name;		
 			private Column(String name) {
 				this.name = name;

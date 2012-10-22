@@ -1,4 +1,4 @@
-package org.tatasu.gwt.client.kendogwt.grid.core;
+package org.tatasu.gwt.client.kendogwt.grid.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

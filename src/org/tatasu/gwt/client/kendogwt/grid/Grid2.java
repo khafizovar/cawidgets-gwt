@@ -4,17 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import org.tatasu.gwt.client.kendogwt.grid.core.GridBean;
 import org.tatasu.gwt.client.kendogwt.grid.core.GridColumn;
-import org.tatasu.gwt.client.kendogwt.grid.core.GridHashMapParser;
 import org.tatasu.gwt.client.kendogwt.grid.core.GridOptionsEnum;
 import org.tatasu.gwt.client.kendogwt.grid.core.ImageColumn;
 import org.tatasu.gwt.client.kendogwt.grid.core.ImgTextColumn;
 import org.tatasu.gwt.client.kendogwt.grid.items.ImgTextCell;
+import org.tatasu.gwt.client.kendogwt.grid.utils.GridBean;
+import org.tatasu.gwt.client.kendogwt.grid.utils.GridHashMapParser;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
@@ -27,7 +28,7 @@ public class Grid2 extends Widget{
 	protected ArrayList<GridColumn> columns;	
 	//protected JSONObject defaultOptions;
 	/** Локальный источник данных */
-	protected ArrayList<HashMap<String, Object>> data;
+	protected ArrayList<HashMap<String, Object>> localData;
 
 
 	
@@ -61,11 +62,15 @@ public class Grid2 extends Widget{
 		div.setId(elementId);
 		this.setElement(div);
 		
-		this.data = data;  
+		this.localData = data;  
 		
 		//this.dataModel = data;
 	}
+	
+	public Grid2(String elementId, ArrayList<GridColumn> columns, ArrayList<HashMap<String, Object>> data, JSONObject options) {
 
+	}
+	
 	@Override
 	protected void onLoad() {
 		createGridModwlWithData();
@@ -76,11 +81,12 @@ public class Grid2 extends Widget{
 		//Опции dataGrid
 		JSONObject options = new JSONObject();		
 		//options.put(Option.GROUPABLE.getName(), new JSONString("false"));
-		options.put(GridOptionsEnum.Option.GROUPABLE.getName(), getPsevdoJsFalse());
-		//options.put(GridOptionsEnum.Option.SORTABLE.getName(), getPsevdoJsFalse());
-		options.put(GridOptionsEnum.Option.PAGEABLE.getName(), getPsevdoJsFalse());
+		options.put(GridOptionsEnum.Option.GROUPABLE.getName(), JSONBoolean.getInstance(false));
+		options.put(GridOptionsEnum.Option.SORTABLE.getName(), JSONBoolean.getInstance(true));
+		options.put(GridOptionsEnum.Option.PAGEABLE.getName(), JSONBoolean.getInstance(false));
+		//options.put(GridOptionsEnum.Option.FILTERABLE.getName(), JSONBoolean.getInstance(true));
 		
-		ArrayList<String> columnNamesFromHashMap = GridHashMapParser.getKeysName(data);		
+		ArrayList<String> columnNamesFromHashMap = GridHashMapParser.getKeysName(localData);		
 		//Колонки
 		/*JSONArray columnsObj = new JSONArray();
 		for (int i = 0; i < columns.size(); i++) {
@@ -97,6 +103,7 @@ public class Grid2 extends Widget{
 				JSONObject column = new JSONObject();
 				column.put(GridOptionsEnum.Column.FIELD.getName(), new JSONString(columnNamesFromHashMap.get(i)));
 				column.put(GridOptionsEnum.Column.TITLE.getName(), new JSONString(columnNamesFromHashMap.get(i)));
+				//column.put(GridOptionsEnum.Column.SORTABLE.getName(), JSONBoolean.getInstance(true));
 				columnsObj.set(i, column);
 			}
 		} else {
@@ -104,11 +111,13 @@ public class Grid2 extends Widget{
 				JSONObject column = new JSONObject();
 				column.put(GridOptionsEnum.Column.FIELD.getName(), new JSONString(columns.get(i).getField()));
 				column.put(GridOptionsEnum.Column.TITLE.getName(), new JSONString(columns.get(i).getTitle()));
+				//column.put(GridOptionsEnum.Column.TITLE.getName(), new JSONString(columns.get(i).getTitle()));
+				column.put(GridOptionsEnum.Column.FILTERABLE.getName(), JSONBoolean.getInstance(true));
 				if(columns.get(i) instanceof ImageColumn)  
 					column.put(GridOptionsEnum.Column.TEMPLATE.getName(), new JSONString(((ImageColumn)columns.get(i)).getImageTemplate()));
 				if(columns.get(i) instanceof ImgTextColumn) {
 					column.put(GridOptionsEnum.Column.TEMPLATE.getName(), new JSONString(((ImgTextColumn)columns.get(i)).getImageTemplate()));
-					column.put(GridOptionsEnum.Column.ENCODED.getName(), new JSONString("false"));
+					column.put(GridOptionsEnum.Column.ENCODED.getName(), JSONBoolean.getInstance(false));
 				}
 				columnsObj.set(i, column);
 			}	
@@ -140,7 +149,8 @@ public class Grid2 extends Widget{
 			dataArr.set(index, dataS);
 			index++;
 		}*/
-		for (HashMap<String, Object> t : data) {
+		//Обход массива данных
+		for (HashMap<String, Object> t : localData) {
 			dataS = new JSONObject();
 			for (String fieldName : columnNamesFromHashMap) {				
 				/*if(t.getValueByFieldName(fieldName) instanceof String) {
