@@ -2,26 +2,28 @@ package org.tatasu.gwt.client.kendogwt.grid.core;
 
 public class GridColumn {
 	/** Используемое поле */
-	private String field;
+	protected String field;
 	/** Наименование колонки */
-	private String title;
+	protected String title;
 	/** Ширина колонки */
-	private int width = -1;
+	protected int width = -1;
+	/** Видимость колонки */
+	protected boolean visible = true;
 	
-	private String template;	
-	private String format;
+//	private String template;	
+//	private String format;
 	
 	
 	public GridColumn(String field, String title, int width) {
-		super();
-		this.field = field;
+		//super();
+		this.field = field.replaceAll(" ", "");
 		this.title = title;
 		this.width = width;
 	}
 
 
 	public GridColumn(String field, String title) {
-		super();
+		//super();
 		this.field = field;
 		this.title = title;
 	}
@@ -96,31 +98,31 @@ public class GridColumn {
 	/**
 	 * @return the template
 	 */
-	public String getTemplate() {
+	/*public String getTemplate() {
 		return template;
-	}
+	}*/
 
 
 	/**
 	 * @param template the template to set
 	 */
-	public void setTemplate(String template) {
+	/*public void setTemplate(String template) {
 		this.template = template;
-	}
+	}*/
 
 
 	/**
 	 * @return the format
 	 */
-	public String getFormat() {
+	/*public String getFormat() {
 		return format;
-	}
+	}*/
 
 
 	/**
 	 * @param format the format to set
 	 */
-	public void setFormat(String format) {
+	/*public void setFormat(String format) {
 		this.format = format;
-	}
+	}*/
 }
