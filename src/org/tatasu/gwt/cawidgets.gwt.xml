@@ -6,8 +6,10 @@
 	
 	<source path="client"/>
 	
-	<!-- jquery -->
-	<script src="jquery-1.8.2.js"/>
+	<!-- jquery 1.8.2 -->
+	<!-- <script src="jquery-1.8.2.js"/> -->
+	<!-- jquery 1.7.1 --> 
+	<script src="jquery.min.js"></script>
 	
 	<!-- for DropDownWidget -->
 	<stylesheet src="dd.css"/>	

@@ -1,4 +1,4 @@
-package org.tatasu.gwt.client.kendogwt.grid.core;
+package org.tatasu.gwt.client.kendogwt.grid.options;
 
 public class GridOptionsEnum {
 	/**
@@ -37,7 +37,11 @@ public class GridOptionsEnum {
 		/**
 		 * Позволяет перетаскиванием изменять порядок столбцов
 		 */
-		REORDERABLE("reorderable");
+		REORDERABLE("reorderable"),
+		/**
+		 * Включение режима выбора, возможные значения "row" Single row selection. "cell" Single cell selection. "multiple, row" Multiple row selection. "multiple, cell" Multiple cell selection.
+		 */
+		SELECTABLE("selectable");
 		private String name;		
 		private Option(String name) {
 			this.name = name;

@@ -5,14 +5,15 @@ import java.util.Date;
 import java.util.HashMap;
 
 import org.tatasu.gwt.client.kendogwt.grid.core.GridColumn;
-import org.tatasu.gwt.client.kendogwt.grid.core.GridOptionsEnum;
 import org.tatasu.gwt.client.kendogwt.grid.core.ImageColumn;
 import org.tatasu.gwt.client.kendogwt.grid.core.ImgTextColumn;
 import org.tatasu.gwt.client.kendogwt.grid.items.ImgTextCell;
-import org.tatasu.gwt.client.kendogwt.grid.utils.GridBean;
+import org.tatasu.gwt.client.kendogwt.grid.options.GridOptions;
+import org.tatasu.gwt.client.kendogwt.grid.options.GridOptionsEnum;
 import org.tatasu.gwt.client.kendogwt.grid.utils.GridHashMapParser;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
@@ -20,40 +21,36 @@ import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
-//import com.google.gwt.core.client.JavaScriptObject;
+
 
 public class Grid2 extends Widget{
 	/** Список колонок */ 
 	protected ArrayList<GridColumn> columns;	
-	//protected JSONObject defaultOptions;
 	/** Локальный источник данных */
 	protected ArrayList<HashMap<String, Object>> localData;
 
-
 	
-	public enum Templates {
-		DATETEMPLATE("#= kendo.toString(BirthDate,\"dd MMMM yyyy\") #");
-		
-		private String name;		
-			private Templates(String name) {
-				this.name = name;
-			}		
-			public String getName() {
-				return this.name;
-			}
-	}
+	protected GridOptions gridOptions;
+	/**
+	 * Использовать новый метод или старый
+	 */
+	protected boolean newStick = true;
 	
 	/** Div элемент который будет выступать родительским элементом */
 	private Element div;
 	private String divElementId;
 	
-	private String width = "100%";
-	private String height = "300px";
+	//private String width = "100%";
+	//private String height = "300px";
 	
+	@Deprecated
 	public Grid2(String elementId,  ArrayList<HashMap<String, Object>> data) {
 		this(elementId, null, data);
 	}
+	
+	@Deprecated
 	public Grid2(String elementId, ArrayList<GridColumn> columns, ArrayList<HashMap<String, Object>> data) {
 		super();
 		this.columns = columns;
@@ -62,31 +59,123 @@ public class Grid2 extends Widget{
 		div.setId(elementId);
 		this.setElement(div);
 		
-		this.localData = data;  
+		this.localData = data;	
+		newStick = false;
+	}
+	
+	public Grid2(GridOptions options, String elementId) {
+		super();
+		this.divElementId = elementId;
+		div = DOM.createDiv();
+		div.setId(elementId);
+		this.setElement(div);
 		
-		//this.dataModel = data;
+		this.localData = options.getDatasource().getData();		
+		this.gridOptions = options;
 	}
-	
-	public Grid2(String elementId, ArrayList<GridColumn> columns, ArrayList<HashMap<String, Object>> data, JSONObject options) {
 
-	}
-	
 	@Override
 	protected void onLoad() {
-		createGridModwlWithData();
+		if(newStick) {
+			createGrid();
+		} else {
+			createGridModwlWithData();
+		}
 		super.onLoad();
 	}
-
+	
+	protected void createGrid() {
+		//Родительские опции датагрида
+		JSONObject options = new JSONObject();
+		
+		//Установка опций дата грида		
+		options.put(GridOptionsEnum.Option.SELECTABLE.getName(), new JSONString(gridOptions.getSelectable()));
+		options.put(GridOptionsEnum.Option.GROUPABLE.getName(), JSONBoolean.getInstance(gridOptions.isGroupable()));
+		options.put(GridOptionsEnum.Option.SORTABLE.getName(), JSONBoolean.getInstance(gridOptions.isSortable()));
+		options.put(GridOptionsEnum.Option.PAGEABLE.getName(), JSONBoolean.getInstance(gridOptions.isPageable()));
+		options.put(GridOptionsEnum.Option.REORDERABLE.getName(), JSONBoolean.getInstance(gridOptions.isReorderable()));
+		options.put(GridOptionsEnum.Option.FILTERABLE.getName(), JSONBoolean.getInstance(gridOptions.isFilterable()));
+		options.put(GridOptionsEnum.Option.SCROLLABLE.getName(), JSONBoolean.getInstance(gridOptions.isScrollable()));
+		
+		//Установка колонок
+		//Получаем все наименования полей 
+		//ArrayList<String> columnNamesFromHashMap = GridHashMapParser.getKeysName(localData);
+		JSONArray columnsArr = new JSONArray();
+		int index = 0;
+		for (GridColumn column : gridOptions.getColumnOptions()) {
+			JSONObject columnJson = new JSONObject();
+			columnJson.put(GridOptionsEnum.Column.FIELD.getName(), new JSONString(column.getField()));
+			columnJson.put(GridOptionsEnum.Column.TITLE.getName(), new JSONString(column.getTitle()));
+			columnJson.put(GridOptionsEnum.Column.ENCODED.getName(), JSONBoolean.getInstance(column.isEncoded()));
+			//columnJson.put(GridOptionsEnum.Column.FILTERABLE.getName(), JSONBoolean.getInstance(column.isFilterable()));
+			//if(column.getFormat() != null)
+			//	columnJson.put(GridOptionsEnum.Column.FORMAT.getName(), new JSONString(column.getFormat()));
+			
+			//columnJson.put(GridOptionsEnum.Column.REORDERABLE.getName(), JSONBoolean.getInstance(column.isReorderable()));
+			
+			//columnJson.put(GridOptionsEnum.Column.RESIZABLE.getName(), JSONBoolean.getInstance(column.isReorderable()));
+			
+			if(column instanceof ImageColumn)  
+				columnJson.put(GridOptionsEnum.Column.TEMPLATE.getName(), new JSONString(((ImageColumn)column).getImageTemplate()));
+			if(column instanceof ImgTextColumn) {
+				columnJson.put(GridOptionsEnum.Column.TEMPLATE.getName(), new JSONString(((ImgTextColumn)column).getImageTemplate()));
+				columnJson.put(GridOptionsEnum.Column.ENCODED.getName(), JSONBoolean.getInstance(false));
+			}
+			
+			//columnJson.put(GridOptionsEnum.Column, jsonValue)
+			options.put(GridOptionsEnum.Option.COLUMNS.getName(), columnsArr);
+			columnsArr.set(index, columnJson);
+			index = index + 1;
+		}
+		
+		/// Инициализация модели данных
+				JSONObject dataSource = new JSONObject();
+				JSONObject dataS = new JSONObject();
+				JSONArray dataArr = new JSONArray();
+				int index2 = 0;
+				//Обход массива данных
+				for (HashMap<String, Object> t : localData) {
+					dataS = new JSONObject();
+					for (String fieldName : gridOptions.getArrayFields()) {				
+						if(t.get(fieldName) instanceof String) {
+							dataS.put(fieldName,new JSONString(t.get(fieldName).toString()));
+						} else if(t.get(fieldName) instanceof Long) {
+							dataS.put(fieldName, new JSONNumber((Long) t.get(fieldName)));
+						} else if(t.get(fieldName) instanceof Double) {
+							dataS.put(fieldName, new JSONNumber((Double) t.get(fieldName)));
+						} else if(t.get(fieldName) instanceof Integer) {
+							dataS.put(fieldName, new JSONNumber((Integer)  t.get(fieldName)));
+						} else if(t.get(fieldName) instanceof Date) {
+							//TODO добавить форматтер либо темплейт kendo
+							dataS.put(fieldName, new JSONString(((Date) t.get(fieldName)).toString()));
+						} else if(t.get(fieldName) instanceof ImgTextCell) {
+							dataS.put(fieldName,new JSONString(t.get(fieldName).toString()));
+						} else {
+							dataS.put(fieldName,new JSONString(t.get(fieldName).toString()));
+						}
+					}
+					dataArr.set(index2, dataS);
+					index2 = index2 + 1;
+				}
+				dataSource.put(GridOptionsEnum.DataSource.DATA.getName(), dataArr);
+				//dataSource.put(DataSource.AUTOBIND.getName(), new JSONString("true"));
+				//Конец инициализации модели данных
+				options.put(GridOptionsEnum.Option.DATASOURCE.getName(), dataSource);
+		
+				createGrid(this, divElementId, JsonUtils.safeEval(options.toString()));
+	}
+	
+	@Deprecated
 	protected void createGridModwlWithData(){
 		//Опции dataGrid
 		JSONObject options = new JSONObject();		
-		//options.put(Option.GROUPABLE.getName(), new JSONString("false"));
+		/*
+		options.put(GridOptionsEnum.Option.SELECTABLE.getName(), new JSONString("row"));
 		options.put(GridOptionsEnum.Option.GROUPABLE.getName(), JSONBoolean.getInstance(false));
 		options.put(GridOptionsEnum.Option.SORTABLE.getName(), JSONBoolean.getInstance(true));
 		options.put(GridOptionsEnum.Option.PAGEABLE.getName(), JSONBoolean.getInstance(false));
-		options.put(GridOptionsEnum.Option.REORDERABLE.getName(), JSONBoolean.getInstance(true));
-		//options.put(GridOptionsEnum.Option.FILTERABLE.getName(), JSONBoolean.getInstance(true));
-		
+		options.put(GridOptionsEnum.Option.REORDERABLE.getName(), JSONBoolean.getInstance(true));		
+		*/
 		ArrayList<String> columnNamesFromHashMap = GridHashMapParser.getKeysName(localData);		
 		//Колонки
 		/*JSONArray columnsObj = new JSONArray();
@@ -177,7 +266,15 @@ public class Grid2 extends Widget{
 		//Конец инициализации модели данных
 		options.put(GridOptionsEnum.Option.DATASOURCE.getName(), dataSource);
 		
-		createGrid(this, divElementId, options.getJavaScriptObject());	
+		
+		options.put(GridOptionsEnum.Option.SELECTABLE.getName(), new JSONString("cell"));
+		options.put(GridOptionsEnum.Option.GROUPABLE.getName(), JSONBoolean.getInstance(true));
+		options.put(GridOptionsEnum.Option.SORTABLE.getName(), JSONBoolean.getInstance(true));
+		options.put(GridOptionsEnum.Option.PAGEABLE.getName(), JSONBoolean.getInstance(false));
+		options.put(GridOptionsEnum.Option.REORDERABLE.getName(), JSONBoolean.getInstance(true));		
+		
+		//createGrid(this, divElementId, options.getJavaScriptObject());
+		createGrid(this, divElementId, JsonUtils.safeEval(options.toString()));
 	}
 	
 	@Override
@@ -204,8 +301,6 @@ public class Grid2 extends Widget{
 	public void setData(ArrayList<HashMap<String, Object>> data) {
 		//Уничтожаем существующий датасурс
 		destroyDataSource();
-		//Устанавливаем текущие данные 
-		//dataModel = data;
 		//Вызываем метод создания грида
 		createGridModwlWithData();		
 	}
@@ -284,11 +379,31 @@ public class Grid2 extends Widget{
 
 	}
 	
-	private JSONObject getPsevdoJsFalse() {
-		return null;
-	};
+	@Override
+	public void setSize(String width, String height) {		
+		setSizeNative(width, height, divElementId);
+		div.setAttribute("width", width);
+		div.setAttribute("height", height);
+		Window.alert(div.getStyle().getWidth() + " " + div.getStyle().getHeight());
+		super.setSize(width, height);
+		 
+	}
 	
-	private JSONString getPsevdoJsTrue() {
-		return new JSONString("true");
-	};
+	private native void setSizeNative(String width, String height, String elId) /*-{
+		$wnd.$('#' + elId).height(height);
+		$wnd.$('#' + elId).width(width);
+		if($wnd.$('#' + elId).data("kendoGrid") != 'undefined' && $wnd.$('#' + elId).data("kendoGrid") != undefined)
+			$wnd.$('#' + elId).data("kendoGrid").refresh();
+		else {
+			$wnd.$(window).load(function(){
+			   $wnd.alert('q44');
+			   $wnd.$('#" + elId + "').height(height);
+			  $wnd.$('#" + elId + "').width(width);
+			});
+			//$wnd.setTimeout(, 1);
+			//$wnd.setTimeout(, 1);
+		}
+	}-*/;
+	
+	
 }

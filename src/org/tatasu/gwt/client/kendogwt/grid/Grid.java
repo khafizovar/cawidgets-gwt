@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import org.tatasu.gwt.client.kendogwt.grid.core.GridColumn;
-import org.tatasu.gwt.client.kendogwt.grid.core.GridOptionsEnum;
+import org.tatasu.gwt.client.kendogwt.grid.options.GridOptionsEnum;
 import org.tatasu.gwt.client.kendogwt.grid.utils.GridBean;
 
 import com.google.gwt.core.client.JavaScriptObject;

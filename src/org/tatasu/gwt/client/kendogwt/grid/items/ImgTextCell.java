@@ -1,6 +1,6 @@
 package org.tatasu.gwt.client.kendogwt.grid.items;
 /**
- * Класс для помещения в ячейку формата [Изображение Текст]
+ * Класс для помещения в ячейку значение формата [Изображение Текст]
  * @author HafizovAR
  *
  */
@@ -11,7 +11,7 @@ public class ImgTextCell {
 	private int imageHeight = -1;
 	private String customCss = null;
 	
-	private String cellHtmlTemplate;
+	//private String cellHtmlTemplate;
 	
 	public ImgTextCell (String imageUrl, String text) {
 		this.imageUrl = imageUrl;
@@ -35,7 +35,7 @@ public class ImgTextCell {
 	public String toString() {
 		String rez = "<div";
 		if(customCss != null) {
-			rez += "style=\"" + customCss + "\"";
+			rez += " style=\"" + customCss + "\"";
 		}
 		rez += ">";
 		if(imageUrl != null && text != null) {

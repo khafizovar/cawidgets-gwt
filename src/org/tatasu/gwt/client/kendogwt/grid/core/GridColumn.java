@@ -14,6 +14,10 @@ public class GridColumn {
 	/** Видимость колонки */
 	protected boolean visible = true;
 	
+	protected boolean encoded = false;
+	protected boolean scrollable = true;
+	
+	
 //	private String template;	
 //	private String format;
 	
@@ -86,6 +90,34 @@ public class GridColumn {
 	 */
 	public void setWidth(int width) {
 		this.width = width;
+	}
+
+	/**
+	 * @return the encoded
+	 */
+	public boolean isEncoded() {
+		return encoded;
+	}
+
+	/**
+	 * @param encoded the encoded to set
+	 */
+	public void setEncoded(boolean encoded) {
+		this.encoded = encoded;
+	}
+
+	/**
+	 * @return the scrollable
+	 */
+	public boolean isScrollable() {
+		return scrollable;
+	}
+
+	/**
+	 * @param scrollable the scrollable to set
+	 */
+	public void setScrollable(boolean scrollable) {
+		this.scrollable = scrollable;
 	}
 
 
