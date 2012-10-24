@@ -30,7 +30,6 @@ public class Grid2 extends Widget{
 	protected ArrayList<GridColumn> columns;	
 	/** Локальный источник данных */
 	protected ArrayList<HashMap<String, Object>> localData;
-
 	
 	protected GridOptions gridOptions;
 	/**
@@ -41,9 +40,6 @@ public class Grid2 extends Widget{
 	/** Div элемент который будет выступать родительским элементом */
 	private Element div;
 	private String divElementId;
-	
-	//private String width = "100%";
-	//private String height = "300px";
 	
 	@Deprecated
 	public Grid2(String elementId,  ArrayList<HashMap<String, Object>> data) {
@@ -76,12 +72,12 @@ public class Grid2 extends Widget{
 
 	@Override
 	protected void onLoad() {
+		super.onLoad();
 		if(newStick) {
 			createGrid();
 		} else {
 			createGridModwlWithData();
 		}
-		super.onLoad();
 	}
 	
 	protected void createGrid() {
@@ -380,13 +376,11 @@ public class Grid2 extends Widget{
 	}
 	
 	@Override
-	public void setSize(String width, String height) {		
-		setSizeNative(width, height, divElementId);
-		div.setAttribute("width", width);
-		div.setAttribute("height", height);
-		Window.alert(div.getStyle().getWidth() + " " + div.getStyle().getHeight());
-		super.setSize(width, height);
-		 
+	public void setSize(String width, String height) {
+			super.setSize(width, height);
+			div.setAttribute("width", width);
+			div.setAttribute("height", height);
+			setSizeNative(width, height, divElementId);
 	}
 	
 	private native void setSizeNative(String width, String height, String elId) /*-{
@@ -395,15 +389,15 @@ public class Grid2 extends Widget{
 		if($wnd.$('#' + elId).data("kendoGrid") != 'undefined' && $wnd.$('#' + elId).data("kendoGrid") != undefined)
 			$wnd.$('#' + elId).data("kendoGrid").refresh();
 		else {
-			$wnd.$(window).load(function(){
-			   $wnd.alert('q44');
-			   $wnd.$('#" + elId + "').height(height);
-			  $wnd.$('#" + elId + "').width(width);
+			$wnd.$(document).ready(function(){
+			   //$wnd.alert('q44:' + $wnd.$('#' + elId).height() + " " + $wnd.$('#' + elId).width());			   
+			   $wnd.$('#' + elId).height(height);
+			   $wnd.$('#' + elId).width(width);
 			});
-			//$wnd.setTimeout(, 1);
-			//$wnd.setTimeout(, 1);
 		}
 	}-*/;
-	
-	
+
+	public void debug() {
+		Window.alert(div.getAttribute("width") + " " + div.getAttribute("height"));
+	}
 }

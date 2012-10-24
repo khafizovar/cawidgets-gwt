@@ -4,12 +4,11 @@ package org.tatasu.gwt.client.kendogwt.grid.items;
  * @author HafizovAR
  *
  */
-public class ImgTextCell {
+public class ImgTextCell extends Cell {
 	private String imageUrl = null;
 	private String text = null;
 	private int imageWidth = -1;
 	private int imageHeight = -1;
-	private String customCss = null;
 	
 	//private String cellHtmlTemplate;
 	
@@ -25,10 +24,6 @@ public class ImgTextCell {
 		this.imageWidth = imageWidth;
 		this.imageHeight = imageHeight;
 		//cellHtmlTemplate ="<div><img src='"+ imageUrl + "' width='" + imageWidth +"' height='" + imageHeight +"'/>&nbsp&nbsp" + text + "</div>";
-	}
-		
-	public void setCellCss(String cssString) {
-		this.customCss = cssString;
 	}
 
 	@Override
