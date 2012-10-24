@@ -13,13 +13,16 @@ public class GridColumn {
 	protected int width = -1;
 	/** Видимость колонки */
 	protected boolean visible = true;
+	/** Порядковый номер колонки */
+	protected int indexNumber = -1;
 	
 	protected boolean encoded = false;
 	protected boolean scrollable = true;
 	
 	
-//	private String template;	
-//	private String format;
+	
+	//	private String template;	
+	//	private String format;
 	
 	/**
 	 * Конструктор
