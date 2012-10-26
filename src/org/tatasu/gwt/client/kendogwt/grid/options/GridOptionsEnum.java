@@ -41,7 +41,11 @@ public class GridOptionsEnum {
 		/**
 		 * Включение режима выбора, возможные значения "row" Single row selection. "cell" Single cell selection. "multiple, row" Multiple row selection. "multiple, cell" Multiple cell selection.
 		 */
-		SELECTABLE("selectable");
+		SELECTABLE("selectable"),
+        /**
+         * Включение/выключение возможности изменения размеров
+         */
+        RESIZABLE("resizable");
 		private String name;		
 		private Option(String name) {
 			this.name = name;

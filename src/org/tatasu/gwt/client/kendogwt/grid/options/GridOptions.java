@@ -48,6 +48,10 @@ public class GridOptions {
 	 * Включение режима выбора, возможные значения "row" Single row selection. "cell" Single cell selection. "multiple, row" Multiple row selection. "multiple, cell" Multiple cell selection.
 	 */
 	private String selectable = "none";
+	/**
+	 * Включение/выключение изменение размера колонок 
+	 */
+	private boolean resizable = true;
 	
 	public GridOptions() { }
 	
@@ -188,5 +192,21 @@ public class GridOptions {
 			}			
 			return rez;
 		} else return null;
+	}
+
+	
+	/**
+	 * @return the resizable
+	 */
+	public boolean isResizable() {
+		return resizable;
+	}
+
+	
+	/**
+	 * @param resizable the resizable to set
+	 */
+	public void setResizable(boolean resizable) {
+		this.resizable = resizable;
 	}
 }
