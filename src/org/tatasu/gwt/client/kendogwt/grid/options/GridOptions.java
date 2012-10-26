@@ -2,7 +2,7 @@ package org.tatasu.gwt.client.kendogwt.grid.options;
 
 import java.util.ArrayList;
 
-import org.tatasu.gwt.client.kendogwt.grid.core.GridColumn;
+import org.tatasu.gwt.client.kendogwt.grid.column.GridColumn;
 
 public class GridOptions {
 	
@@ -19,7 +19,7 @@ public class GridOptions {
     /**
      * Опции для датасурса, см enum DataSource, по умолчанию см опции по умолчиню объекта DataSourceOptions
      */
-    private DataSourceOptions datasource = new DataSourceOptions();
+    private DataSource datasource = new DataSource();
     /**
      * Массив с колонками, см enum Column
      */
@@ -55,7 +55,7 @@ public class GridOptions {
 	
 	public GridOptions() { }
 	
-	public GridOptions(boolean pageable, DataSourceOptions datasource,
+	public GridOptions(boolean pageable, DataSource datasource,
 			ArrayList<GridColumn> columnOptions, boolean groupable,
 			boolean filterable, boolean scrollable, boolean sortable,
 			boolean reorderable, String selectable) {
@@ -90,13 +90,13 @@ public class GridOptions {
 	/**
 	 * @return the datasource
 	 */
-	public DataSourceOptions getDatasource() {
+	public DataSource getDatasource() {
 		return datasource;
 	}
 	/**
 	 * @param datasource the datasource to set
 	 */
-	public void setDatasource(DataSourceOptions datasource) {
+	public void setDatasource(DataSource datasource) {
 		this.datasource = datasource;
 	}
 	/**

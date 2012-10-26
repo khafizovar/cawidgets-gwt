@@ -1,4 +1,4 @@
-package org.tatasu.gwt.client.kendogwt.grid.core;
+package org.tatasu.gwt.client.kendogwt.grid.column;
 /**
  * Класс колонки используемый для создания объектов Колонок
  * @author HafizovAR

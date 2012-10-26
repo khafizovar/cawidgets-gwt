@@ -3,7 +3,7 @@ package org.tatasu.gwt.client.kendogwt.grid.options;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class DataSourceOptions {
+public class DataSource {
 	/**
 	 * Массив данных
 	 */
@@ -36,12 +36,12 @@ public class DataSourceOptions {
 	public void setAutoBind(boolean autoBind) {
 		this.autoBind = autoBind;
 	}
-	public DataSourceOptions(ArrayList<HashMap<String, Object>> data,
+	public DataSource(ArrayList<HashMap<String, Object>> data,
 			boolean autoBind) {
 		super();
 		this.data = data;
 		this.autoBind = autoBind;
 	}
-	public DataSourceOptions() {	}
+	public DataSource() {	}
 	
 }

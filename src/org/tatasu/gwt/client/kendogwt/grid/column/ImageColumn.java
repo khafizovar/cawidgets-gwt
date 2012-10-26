@@ -1,4 +1,4 @@
-package org.tatasu.gwt.client.kendogwt.grid.core;
+package org.tatasu.gwt.client.kendogwt.grid.column;
 
 /**
  * Колонка с изображением, изображение формируется на базе темплейта, поразумевается что ссылка на изображение 

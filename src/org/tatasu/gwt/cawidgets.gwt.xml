@@ -21,5 +21,6 @@
 	<script src="kendoui/js/kendo.web.min.js"/>
 	
 	<stylesheet src="kendoui/styles/kendo.common.min.css"/>
-	<stylesheet src="kendoui/styles/kendo.default.min.css"/>	
+	<!-- <stylesheet src="kendoui/styles/kendo.default.min.css"/> -->
+	<stylesheet src="kendoui/styles/kendo.mystyle.css"/>	
 </module>

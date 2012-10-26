@@ -1,4 +1,4 @@
-package org.tatasu.gwt.client.kendogwt.grid.core;
+package org.tatasu.gwt.client.kendogwt.grid.column;
 
 /**
  * Колонка для отображения текста + иконка. Использовать совместно с ImgTextCell в источнике данных ArrayList<HashMap<String, Object>> 

@@ -3,7 +3,7 @@ package org.tatasu.gwt.client.kendogwt.grid;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.tatasu.gwt.client.kendogwt.grid.core.GridColumn;
+import org.tatasu.gwt.client.kendogwt.grid.column.GridColumn;
 import org.tatasu.gwt.client.kendogwt.grid.options.GridOptionsEnum;
 import org.tatasu.gwt.client.kendogwt.grid.utils.GridBean;
 

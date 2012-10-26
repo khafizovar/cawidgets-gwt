@@ -3,9 +3,10 @@ package org.tatasu.gwt.client.kendogwt.grid;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import org.tatasu.gwt.client.kendogwt.grid.core.GridColumn;
-import org.tatasu.gwt.client.kendogwt.grid.core.ImageColumn;
-import org.tatasu.gwt.client.kendogwt.grid.core.ImgTextColumn;
+
+import org.tatasu.gwt.client.kendogwt.grid.column.GridColumn;
+import org.tatasu.gwt.client.kendogwt.grid.column.ImageColumn;
+import org.tatasu.gwt.client.kendogwt.grid.column.ImgTextColumn;
 import org.tatasu.gwt.client.kendogwt.grid.events.change.GridChangeCells;
 import org.tatasu.gwt.client.kendogwt.grid.events.change.GridChangeEvent;
 import org.tatasu.gwt.client.kendogwt.grid.events.change.GridChangeListener;
@@ -13,8 +14,11 @@ import org.tatasu.gwt.client.kendogwt.grid.events.columnresize.GridColumnResizeE
 import org.tatasu.gwt.client.kendogwt.grid.events.columnresize.GridColumnResizeListener;
 import org.tatasu.gwt.client.kendogwt.grid.events.databound.GridDataBoundEvent;
 import org.tatasu.gwt.client.kendogwt.grid.events.databound.GridDataBoundListener;
+import org.tatasu.gwt.client.kendogwt.grid.options.DataSource;
 import org.tatasu.gwt.client.kendogwt.grid.options.GridOptions;
 import org.tatasu.gwt.client.kendogwt.grid.options.GridOptionsEnum;
+import org.tatasu.gwt.client.kendogwt.grid.utils.DataConverter;
+
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.dom.client.Element;
@@ -41,9 +45,10 @@ import com.google.gwt.user.client.ui.Widget;
 public class Grid2 extends Widget {
 
 	/** Список колонок */
-	protected ArrayList<GridColumn>					columns;
+	//protected ArrayList<GridColumn>					columns;
 	/** Локальный источник данных */
-	protected ArrayList<HashMap<String, Object>>	localData;
+	//protected ArrayList<HashMap<String, Object>>	dataProvider;
+	protected DataSource 							dataSource;
 	/** Опции грида */
 	protected GridOptions							gridOptions;
 
@@ -65,7 +70,8 @@ public class Grid2 extends Widget {
 		div.setId(elementId);
 		this.setElement(div);
 
-		this.localData = options.getDatasource().getData();
+		//this.dataProvider = options.getDatasource().getData();
+		this.dataSource = options.getDatasource();
 		this.gridOptions = options;
 	}
 
@@ -88,6 +94,8 @@ public class Grid2 extends Widget {
 		options.put(GridOptionsEnum.Option.FILTERABLE.getName(), JSONBoolean.getInstance(gridOptions.isFilterable()));
 		options.put(GridOptionsEnum.Option.SCROLLABLE.getName(), JSONBoolean.getInstance(gridOptions.isScrollable()));
 		options.put(GridOptionsEnum.Option.RESIZABLE.getName(), JSONBoolean.getInstance(gridOptions.isResizable()));
+		
+		options.put("editable", JSONBoolean.getInstance(true));
 
 		// Установка колонок
 		// Получаем все наименования полей
@@ -126,12 +134,13 @@ public class Grid2 extends Widget {
 		}
 
 		// / Инициализация модели данных
-		JSONObject dataSource = new JSONObject();
+		/*JSONObject dataSourceJs = new JSONObject();
 		JSONObject dataS = new JSONObject();
 		JSONArray dataArr = new JSONArray();
 		int index2 = 0;
 		// Обход массива данных
-		for (HashMap<String, Object> t : localData) {
+		//for (HashMap<String, Object> t : dataProvider) {
+		for (HashMap<String, Object> t : dataSource.getData()) {
 			dataS = new JSONObject();
 			for (String fieldName : gridOptions.getArrayFields()) {
 				if (t.get(fieldName) instanceof String) {
@@ -160,11 +169,10 @@ public class Grid2 extends Widget {
 			dataArr.set(index2, dataS);
 			index2 = index2 + 1;
 		}
-		dataSource.put(GridOptionsEnum.DataSource.DATA.getName(), dataArr);
-		// dataSource.put(DataSource.AUTOBIND.getName(), new
-		// JSONString("true"));
-		// Конец инициализации модели данных
-		options.put(GridOptionsEnum.Option.DATASOURCE.getName(), dataSource);
+		dataSourceJs.put(GridOptionsEnum.DataSource.DATA.getName(), dataArr);
+		options.put(GridOptionsEnum.Option.DATASOURCE.getName(), dataSourceJs); */
+		
+		options.put(GridOptionsEnum.Option.DATASOURCE.getName(), DataConverter.getJSObjectFromArrayHashMap(dataSource.getData(), gridOptions));
 
 		createGrid(this, divElementId, JsonUtils.safeEval(options.toString()));
 	}
@@ -229,51 +237,25 @@ public class Grid2 extends Widget {
 	 * 
 	 * @param data
 	 */
+	@Deprecated
 	public void setData(ArrayList<HashMap<String, Object>> data) {
 		// Уничтожаем существующий датасурс
 		destroyDataSource();
 		// Подменяем текущие данные
-		localData = data;
+		//dataProvider = data;
+		dataSource.setData(data);
 		// Вызываем метод создания грида				
 		createGrid();
-		// TODO добавить метод установки данных
-		/*
-		JSONArray dataArr = new JSONArray();
-		int index2 = 0;
-		// Обход массива данных
-		for (HashMap<String, Object> t : localData) {
-			JSONObject dataS = new JSONObject();
-			for (String fieldName : gridOptions.getArrayFields()) {
-				if (t.get(fieldName) instanceof String) {
-					dataS.put(fieldName, new JSONString(t.get(fieldName).toString()));
-				} else if (t.get(fieldName) instanceof Long) {
-					dataS.put(fieldName, new JSONNumber((Long) t.get(fieldName)));
-				} else if (t.get(fieldName) instanceof Double) {
-					dataS.put(fieldName, new JSONNumber((Double) t.get(fieldName)));
-				} else if (t.get(fieldName) instanceof Integer) {
-					dataS.put(fieldName, new JSONNumber((Integer) t.get(fieldName)));
-				} else if (t.get(fieldName) instanceof Date) {
-					DateTimeFormat fmt = DateTimeFormat.getFormat("dd.MM.yyyy HH:mm:ss");
-					dataS.put(fieldName, new JSONString(fmt.format(((Date) t.get(fieldName)))));
-					// } else if (t.get(fieldName) instanceof DateCell) {
-
-					// } else if (t.get(fieldName) instanceof ImgTextCell) {
-					// dataS.put(fieldName, new
-					// JSONString(t.get(fieldName).toString()));
-				} else {
-					if(t.get(fieldName) != null)
-						dataS.put(fieldName, new JSONString(t.get(fieldName).toString()));
-					else 
-						dataS.put(fieldName, new JSONString(""));
-				}
-			}
-			dataArr.set(index2, dataS);
-			index2 = index2 + 1;
-		}
-		
-		JSONObject dataSource = new JSONObject();
-		dataSource.put(GridOptionsEnum.DataSource.DATA.getName(), dataArr);
-		setGridData(divElementId, dataSource.getJavaScriptObject());*/
+	}
+	/**
+	 * Установка нового DataSource
+	 * @param data	Новый объект ДатаСоурс
+	 */
+	public void setDataSource(DataSource data) {
+		destroyDataSource();
+		//dataProvider = data.getData();
+		dataSource = data;
+		createGrid();
 	}
 	
 	/**
@@ -281,7 +263,8 @@ public class Grid2 extends Widget {
 	 */
 	public void destroyDataSource() {
 		destroyDataSourceNative(divElementId);
-		localData = new ArrayList<HashMap<String,Object>>();
+		//dataProvider = new ArrayList<HashMap<String,Object>>();
+		dataSource = new DataSource();
 	}
 
 	/**
@@ -302,12 +285,20 @@ public class Grid2 extends Widget {
 	}-*/;
 	
 	/**
+	 * Уничтожение грида
+	 * Данный метод не вырезает элемент div контейнера из модели dom
+	 * @param id
+	 */
+	private native void destroyGrid(String id) /*-{
+		$wnd.$("#" + id).data("kendoGrid").destroy();
+	}-*/;
+	/**
 	 * Добавление объекта в kendo grid, привязка объекта к гриду осуществляется по ключу String, т.е. String = filedName
 	 * Добавление нового объекта приводит к срабатыванию события dataBound
 	 * @param row добавляемый объект
 	 */
 	public void addRow(HashMap<String, Object> row) { 
-		JSONObject dataS = new JSONObject();
+		/*JSONObject dataS = new JSONObject();
 		for (String fieldName : gridOptions.getArrayFields()) {
 			if (row.get(fieldName) instanceof String) {
 				dataS.put(fieldName, new JSONString(row.get(fieldName).toString()));
@@ -326,10 +317,11 @@ public class Grid2 extends Widget {
 				else 
 					dataS.put(fieldName, new JSONString(""));
 			}
-		}
+		}*/
 		//Добавляем в локальный источник данных
-		localData.add(row);
-		addRowNative(divElementId, dataS.getJavaScriptObject());
+		//dataProvider.add(row);
+		dataSource.getData().add(row);
+		addRowNative(divElementId, DataConverter.getJSObjectFromHashMap(row, gridOptions).getJavaScriptObject());//dataS.getJavaScriptObject());
 	}
 	/**
 	 * нативный метод добавления объекта в грид
@@ -344,27 +336,89 @@ public class Grid2 extends Widget {
 		}
 
 	}-*/;
-
 	/**
-	 * Удаление объекта по объекту !ВНИМАНИЕ будут удалены все строки значения
-	 * которых совпадают с указанными значениями
+	 * Удаление объекта по индексу строки данных
+	 * <b>Удаление происходит по текущему индексу ОТОБРАЖАЕМОЙ строки в таблице, т.е. например при постраничном отображении, на странице 2 нумерация будет начинаться также с 0</b>
+	 * Строки группировки игнорируются
 	 * 
-	 * @param bean
+	 * @param index
+	 * TODO нет синхронизации с локальным dataSource
 	 */
-	/*
-	 * public void removeItem(T bean) {
-	 * 
-	 * }
-	 */
+	/*public void removeVisibleItem(int index) {
+		removeVisibleItemNative(divElementId, index);
+	}*/
 	/**
-	 * Удаление объекта по индексу в источнике данных
-	 * 
+	 * нативный метод удаления отображаемой строки
+	 * @param id 	идентификатор элемента
+	 * @param rowIndex	индекс отображаемой строки
+	 */
+	/*public native void removeVisibleItemNative(String id, int rowIndex) /*-{
+	    var grid = $wnd.$("#" + id).data("kendoGrid"),
+            row = grid.tbody.find(">tr:not(.k-grouping-row)").eq(rowIndex);
+			grid.removeRow(row);
+	}-*/
+	/**
+	 * Удаление элемента по индексу в dataSource, после удаления датагриду в js передается новый объект с данными для установки их в грид
 	 * @param index
 	 */
 	public void removeItem(int index) {
-
+		//removeItem(divElementId, index);
+		this.dataSource.getData().remove(index);
+		
+		// / Инициализация модели данных
+		/*		JSONObject dataSourceJs = new JSONObject();
+				JSONObject dataS = new JSONObject();
+				JSONArray dataArr = new JSONArray();
+				int index2 = 0;
+				// Обход массива данных
+				//for (HashMap<String, Object> t : dataProvider) {
+				for (HashMap<String, Object> t : dataSource.getData()) {
+					dataS = new JSONObject();
+					for (String fieldName : gridOptions.getArrayFields()) {
+						if (t.get(fieldName) instanceof String) {
+							dataS.put(fieldName, new JSONString(t.get(fieldName).toString()));
+						} else if (t.get(fieldName) instanceof Long) {
+							dataS.put(fieldName, new JSONNumber((Long) t.get(fieldName)));
+						} else if (t.get(fieldName) instanceof Double) {
+							dataS.put(fieldName, new JSONNumber((Double) t.get(fieldName)));
+						} else if (t.get(fieldName) instanceof Integer) {
+							dataS.put(fieldName, new JSONNumber((Integer) t.get(fieldName)));
+						} else if (t.get(fieldName) instanceof Date) {
+							DateTimeFormat fmt = DateTimeFormat.getFormat("dd.MM.yyyy HH:mm:ss");
+							dataS.put(fieldName, new JSONString(fmt.format(((Date) t.get(fieldName)))));
+						} else {
+							if(t.get(fieldName) != null)
+								dataS.put(fieldName, new JSONString(t.get(fieldName).toString()));
+							else 
+								dataS.put(fieldName, new JSONString(""));
+						}
+					}
+					dataArr.set(index2, dataS);
+					index2 = index2 + 1;
+				}
+				dataSourceJs.put(GridOptionsEnum.DataSource.DATA.getName(), dataArr);		
+				removeItem(divElementId,0,dataArr.getJavaScriptObject());*/
+				setNewDataSource(divElementId, DataConverter.getJSObjectFromArrayHashMap(this.dataSource.getData(), gridOptions).getJavaScriptObject());
 	}
-
+	
+	public native void setNewDataSource(String id, JavaScriptObject dataSource)/*-{
+			var grid = $wnd.$("#" + id).data("kendoGrid");
+			//grid.dataSource.remove(grid.dataSource.get(index));
+			grid.dataSource.data(dataSource);
+			//grid.dataSource = dataSource;
+			grid.refresh();
+	}-*/;
+	
+	/**
+	 * Нативный метод удаления выделенных объектов
+	 * @param id
+	 */
+	public native void removeSelecteItemsNative(String id) /*-{
+         $wnd.$("#" + id).data("kendoGrid").select().each(function() {
+               $wnd.$("#" + id).data("kendoGrid").removeRow($wnd.$(this)); 
+         });
+	}-*/;
+	
 	@Override
 	public void setSize(String width, String height) {
 		super.setSize(width, height);
