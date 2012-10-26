@@ -7,6 +7,8 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 public class DateCell extends Cell {
 	/** Формат даты */
 	private String format = "dd.MM.yyyy HH:mm:ss";
+	
+	//private String formatKendo = "{0:dd.MM.yyyy HH:mm:ss} ";
 	/** Дата в лонг формате */
 	private long dateInMilliseconds = -1;
 	/**
@@ -37,4 +39,17 @@ public class DateCell extends Cell {
 		rez += "</div>";
 		return rez;
 	}
+	
+	public Date getDate(){
+		return new Date(dateInMilliseconds);
+	}
+	//public getDateformat: "{0:dd.MM.yyyy}"
+
+	/*public String getFormatKendo() {
+		return formatKendo;
+	}
+
+	public void setFormatKendo(String formatKendo) {
+		this.formatKendo = formatKendo;
+	}*/
 }

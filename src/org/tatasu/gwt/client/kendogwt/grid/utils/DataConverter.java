@@ -10,11 +10,14 @@ import org.tatasu.gwt.client.kendogwt.grid.options.GridOptionsEnum;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 
 public class DataConverter {
+	
+	public static final String defaultDataForamt = "dd.MM.yyyy HH:mm:ss";
 	/*public static JavaScriptObject getJSObjectFromDataSource(DataSource) {
 		JSONObject ok = new JSONObject();
 		return ok.getJavaScriptObject();
@@ -78,8 +81,10 @@ public class DataConverter {
 			} else if (t.get(fieldName) instanceof Integer) {
 				dataS.put(fieldName, new JSONNumber((Integer) t.get(fieldName)));
 			} else if (t.get(fieldName) instanceof Date) {
-				DateTimeFormat fmt = DateTimeFormat.getFormat("dd.MM.yyyy HH:mm:ss");
+				DateTimeFormat fmt = DateTimeFormat.getFormat(defaultDataForamt);
 				dataS.put(fieldName, new JSONString(fmt.format(((Date) t.get(fieldName)))));
+			} else if(t.get(fieldName) instanceof Boolean) {
+				dataS.put(fieldName, JSONBoolean.getInstance((Boolean)t.get(fieldName)));
 			} else {
 				if(t.get(fieldName) != null)
 					dataS.put(fieldName, new JSONString(t.get(fieldName).toString()));

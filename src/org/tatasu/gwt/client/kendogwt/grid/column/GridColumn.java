@@ -19,6 +19,8 @@ public class GridColumn {
 	protected boolean encoded = false;
 	protected boolean scrollable = true;
 	
+	protected String format = null;
+	
 	
 	
 	//	private String template;	
@@ -121,6 +123,22 @@ public class GridColumn {
 	 */
 	public void setScrollable(boolean scrollable) {
 		this.scrollable = scrollable;
+	}
+
+	
+	/**
+	 * @return the format
+	 */
+	public String getFormat() {
+		return format;
+	}
+
+	
+	/**
+	 * @param format the format to set
+	 */
+	public void setFormat(String format) {
+		this.format = format;
 	}
 
 

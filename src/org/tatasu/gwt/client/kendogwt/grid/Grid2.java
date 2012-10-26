@@ -98,9 +98,6 @@ public class Grid2 extends Widget {
 		options.put("editable", JSONBoolean.getInstance(true));
 
 		// Установка колонок
-		// Получаем все наименования полей
-		// ArrayList<String> columnNamesFromHashMap =
-		// GridHashMapParser.getKeysName(localData);
 		JSONArray columnsArr = new JSONArray();
 		int index = 0;
 		for (GridColumn column : gridOptions.getColumnOptions()) {
@@ -109,17 +106,6 @@ public class Grid2 extends Widget {
 			columnJson.put(GridOptionsEnum.Column.FIELD.getName(), new JSONString(column.getField()));
 			columnJson.put(GridOptionsEnum.Column.TITLE.getName(), new JSONString(column.getTitle()));
 			columnJson.put(GridOptionsEnum.Column.ENCODED.getName(), JSONBoolean.getInstance(column.isEncoded()));
-			// columnJson.put(GridOptionsEnum.Column.FILTERABLE.getName(),
-			// JSONBoolean.getInstance(column.isFilterable()));
-			// if(column.getFormat() != null)
-			// columnJson.put(GridOptionsEnum.Column.FORMAT.getName(), new
-			// JSONString(column.getFormat()));
-
-			// columnJson.put(GridOptionsEnum.Column.REORDERABLE.getName(),
-			// JSONBoolean.getInstance(column.isReorderable()));
-
-			// columnJson.put(GridOptionsEnum.Column.RESIZABLE.getName(),
-			// JSONBoolean.getInstance(column.isReorderable()));
 
 			if (column instanceof ImageColumn)
 				columnJson.put(GridOptionsEnum.Column.TEMPLATE.getName(), new JSONString(((ImageColumn) column).getImageTemplate()));
@@ -133,44 +119,6 @@ public class Grid2 extends Widget {
 			index = index + 1;
 		}
 
-		// / Инициализация модели данных
-		/*JSONObject dataSourceJs = new JSONObject();
-		JSONObject dataS = new JSONObject();
-		JSONArray dataArr = new JSONArray();
-		int index2 = 0;
-		// Обход массива данных
-		//for (HashMap<String, Object> t : dataProvider) {
-		for (HashMap<String, Object> t : dataSource.getData()) {
-			dataS = new JSONObject();
-			for (String fieldName : gridOptions.getArrayFields()) {
-				if (t.get(fieldName) instanceof String) {
-					dataS.put(fieldName, new JSONString(t.get(fieldName).toString()));
-				} else if (t.get(fieldName) instanceof Long) {
-					dataS.put(fieldName, new JSONNumber((Long) t.get(fieldName)));
-				} else if (t.get(fieldName) instanceof Double) {
-					dataS.put(fieldName, new JSONNumber((Double) t.get(fieldName)));
-				} else if (t.get(fieldName) instanceof Integer) {
-					dataS.put(fieldName, new JSONNumber((Integer) t.get(fieldName)));
-				} else if (t.get(fieldName) instanceof Date) {
-					DateTimeFormat fmt = DateTimeFormat.getFormat("dd.MM.yyyy HH:mm:ss");
-					dataS.put(fieldName, new JSONString(fmt.format(((Date) t.get(fieldName)))));
-					// } else if (t.get(fieldName) instanceof DateCell) {
-
-					// } else if (t.get(fieldName) instanceof ImgTextCell) {
-					// dataS.put(fieldName, new
-					// JSONString(t.get(fieldName).toString()));
-				} else {
-					if(t.get(fieldName) != null)
-						dataS.put(fieldName, new JSONString(t.get(fieldName).toString()));
-					else 
-						dataS.put(fieldName, new JSONString(""));
-				}
-			}
-			dataArr.set(index2, dataS);
-			index2 = index2 + 1;
-		}
-		dataSourceJs.put(GridOptionsEnum.DataSource.DATA.getName(), dataArr);
-		options.put(GridOptionsEnum.Option.DATASOURCE.getName(), dataSourceJs); */
 		
 		options.put(GridOptionsEnum.Option.DATASOURCE.getName(), DataConverter.getJSObjectFromArrayHashMap(dataSource.getData(), gridOptions));
 
@@ -191,19 +139,26 @@ public class Grid2 extends Widget {
 	 */
 	private native void createGrid(Grid2 grid, String id, JavaScriptObject options) /*-{
 		try {
-			//options.start = function(event, ui) {
-			//	slider.@org.tatasu.modules.slider.Slider::fireOnStartEvent(Lcom/google/gwt/user/client/Event;Lcom/google/gwt/core/client/JsArrayInteger;)(event, ui.values);
-			//};
-			//options.slide = function(event, ui) {
-			//	return slider.@org.tatasu.modules.slider.Slider::fireOnSlideEvent(Lcom/google/gwt/user/client/Event;Lcom/google/gwt/core/client/JsArrayInteger;)(event, ui.values);
-			//};
-			//options.change = function(event, ui) {
-			//	var hasChange = event.originalEvent ? true : false;
-			//	slider.@org.tatasu.modules.slider.Slider::fireOnChangeEvent(Lcom/google/gwt/user/client/Event;Lcom/google/gwt/core/client/JsArrayInteger;Z)(event, ui.values, hasChange);
-			//};
-			//options.stop = function(event, ui) {
-			//	slider.@org.tatasu.modules.slider.Slider::fireOnStopEvent(Lcom/google/gwt/user/client/Event;Lcom/google/gwt/core/client/JsArrayInteger;)(event, ui.values);
-			//};
+			
+			options.columns[2].editor = function (container, options) {
+				//$wnd.alert(JSON.stringify(options));
+                    $wnd.$('<div id="calendar" style="width: 100%;">  <input id="datetimepicker" value="'+ options.model.datesample2 + '" style="width:200px;" /><div>').appendTo(container).kendoDateTimePicker({
+                    	//timeFormat: "HH:mm", //24 hours format
+                    	format: "dd.MM.yyyy hh:mm:ss",
+    					parseFormats: ["dd.MM.yyyy hh:mm:ss"] //format also will be added to parseFormats
+                    });
+                    	
+                      //  .appendTo(container)
+                        //.kendoDropDownList({
+                          //  autoBind: false,
+                            //dataSource: {
+                              //  type: "odata",
+                                //transport: {
+                                  //  read: "http://demos.kendoui.com/service/Northwind.svc/Categories"
+                                //}
+                            //}
+                        //});
+                };
 			options.dataBound = function(event) {
 				grid.@org.tatasu.gwt.client.kendogwt.grid.Grid2::fireDataBoundEvent(Lcom/google/gwt/user/client/Event;)(event);
 			};
@@ -263,7 +218,6 @@ public class Grid2 extends Widget {
 	 */
 	public void destroyDataSource() {
 		destroyDataSourceNative(divElementId);
-		//dataProvider = new ArrayList<HashMap<String,Object>>();
 		dataSource = new DataSource();
 	}
 
@@ -298,28 +252,7 @@ public class Grid2 extends Widget {
 	 * @param row добавляемый объект
 	 */
 	public void addRow(HashMap<String, Object> row) { 
-		/*JSONObject dataS = new JSONObject();
-		for (String fieldName : gridOptions.getArrayFields()) {
-			if (row.get(fieldName) instanceof String) {
-				dataS.put(fieldName, new JSONString(row.get(fieldName).toString()));
-			} else if (row.get(fieldName) instanceof Long) {
-				dataS.put(fieldName, new JSONNumber((Long) row.get(fieldName)));
-			} else if (row.get(fieldName) instanceof Double) {
-				dataS.put(fieldName, new JSONNumber((Double) row.get(fieldName)));
-			} else if (row.get(fieldName) instanceof Integer) {
-				dataS.put(fieldName, new JSONNumber((Integer) row.get(fieldName)));
-			} else if (row.get(fieldName) instanceof Date) {
-				DateTimeFormat fmt = DateTimeFormat.getFormat("dd.MM.yyyy HH:mm:ss");
-				dataS.put(fieldName, new JSONString(fmt.format(((Date) row.get(fieldName)))));
-			} else {
-				if(row.get(fieldName) != null)
-					dataS.put(fieldName, new JSONString(row.get(fieldName).toString()));
-				else 
-					dataS.put(fieldName, new JSONString(""));
-			}
-		}*/
 		//Добавляем в локальный источник данных
-		//dataProvider.add(row);
 		dataSource.getData().add(row);
 		addRowNative(divElementId, DataConverter.getJSObjectFromHashMap(row, gridOptions).getJavaScriptObject());//dataS.getJavaScriptObject());
 	}
@@ -361,51 +294,14 @@ public class Grid2 extends Widget {
 	 * Удаление элемента по индексу в dataSource, после удаления датагриду в js передается новый объект с данными для установки их в грид
 	 * @param index
 	 */
-	public void removeItem(int index) {
-		//removeItem(divElementId, index);
+	public void removeItem(int index) {		
 		this.dataSource.getData().remove(index);
-		
-		// / Инициализация модели данных
-		/*		JSONObject dataSourceJs = new JSONObject();
-				JSONObject dataS = new JSONObject();
-				JSONArray dataArr = new JSONArray();
-				int index2 = 0;
-				// Обход массива данных
-				//for (HashMap<String, Object> t : dataProvider) {
-				for (HashMap<String, Object> t : dataSource.getData()) {
-					dataS = new JSONObject();
-					for (String fieldName : gridOptions.getArrayFields()) {
-						if (t.get(fieldName) instanceof String) {
-							dataS.put(fieldName, new JSONString(t.get(fieldName).toString()));
-						} else if (t.get(fieldName) instanceof Long) {
-							dataS.put(fieldName, new JSONNumber((Long) t.get(fieldName)));
-						} else if (t.get(fieldName) instanceof Double) {
-							dataS.put(fieldName, new JSONNumber((Double) t.get(fieldName)));
-						} else if (t.get(fieldName) instanceof Integer) {
-							dataS.put(fieldName, new JSONNumber((Integer) t.get(fieldName)));
-						} else if (t.get(fieldName) instanceof Date) {
-							DateTimeFormat fmt = DateTimeFormat.getFormat("dd.MM.yyyy HH:mm:ss");
-							dataS.put(fieldName, new JSONString(fmt.format(((Date) t.get(fieldName)))));
-						} else {
-							if(t.get(fieldName) != null)
-								dataS.put(fieldName, new JSONString(t.get(fieldName).toString()));
-							else 
-								dataS.put(fieldName, new JSONString(""));
-						}
-					}
-					dataArr.set(index2, dataS);
-					index2 = index2 + 1;
-				}
-				dataSourceJs.put(GridOptionsEnum.DataSource.DATA.getName(), dataArr);		
-				removeItem(divElementId,0,dataArr.getJavaScriptObject());*/
-				setNewDataSource(divElementId, DataConverter.getJSObjectFromArrayHashMap(this.dataSource.getData(), gridOptions).getJavaScriptObject());
+		setNewDataSource(divElementId, DataConverter.getJSObjectFromArrayHashMap(this.dataSource.getData(), gridOptions).getJavaScriptObject());
 	}
 	
 	public native void setNewDataSource(String id, JavaScriptObject dataSource)/*-{
 			var grid = $wnd.$("#" + id).data("kendoGrid");
-			//grid.dataSource.remove(grid.dataSource.get(index));
 			grid.dataSource.data(dataSource);
-			//grid.dataSource = dataSource;
 			grid.refresh();
 	}-*/;
 	
@@ -446,8 +342,7 @@ public class Grid2 extends Widget {
 				&& $wnd.$('#' + elId).data("kendoGrid") != undefined)
 			$wnd.$('#' + elId).data("kendoGrid").refresh();
 		else {
-			$wnd.$(document).ready(function() {
-				//$wnd.alert('q44:' + $wnd.$('#' + elId).height() + " " + $wnd.$('#' + elId).width());			   
+			$wnd.$(document).ready(function() {		   
 				$wnd.$('#' + elId).height(height);
 				$wnd.$('#' + elId).width(width);
 			});
@@ -466,7 +361,6 @@ public class Grid2 extends Widget {
 	 * @param selectedvalues
 	 */
 	private void fireOnChangeEvent(Event event, JavaScriptObject selectedvalues) {
-		// 'value' :cellvalue, 'columnIndex':idx, "columnField"
 		final String CONST_VALUE = "value";
 		final String CONST_COLUMN_INDEX = "columnIndex";
 		final String CONST_COLUMN_FIELD = "columnField";
