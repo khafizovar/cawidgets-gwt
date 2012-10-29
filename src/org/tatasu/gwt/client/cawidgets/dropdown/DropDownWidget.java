@@ -100,14 +100,18 @@ public class DropDownWidget extends Widget{
 		}
 	}
 	
-	private native void createDropDownWidget(DropDownWidget ddlist, String id, int _visibleRows, int _rowHeight, String wdth, String hght) /*-{	
-  		$wnd.$("#" + id).width(wdth);
-  		$wnd.$("#" + id).height(hght);
-  		$wnd.$("#" + id).msDropDown({visibleRows:_visibleRows, rowHeight:_rowHeight});
-  		$wnd.$('#'+id).change(function(event) {	
-  			var newVal = $wnd.$(this).val();
-  			ddlist.@org.tatasu.gwt.client.cawidgets.dropdown.DropDownWidget::fireOnChangeEvent(Lcom/google/gwt/user/client/Event;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)(event, "", newVal, "");
-  		});
+	private native void createDropDownWidget(DropDownWidget ddlist, String id, int _visibleRows, int _rowHeight, String wdth, String hght) /*-{
+		try{	
+	  		$wnd.$("#" + id).width(wdth);
+	  		$wnd.$("#" + id).height(hght);
+	  		$wnd.$("#" + id).msDropDown({visibleRows:_visibleRows, rowHeight:_rowHeight});
+	  		$wnd.$('#'+id).change(function(event) {	
+	  			var newVal = $wnd.$(this).val();
+	  			ddlist.@org.tatasu.gwt.client.cawidgets.dropdown.DropDownWidget::fireOnChangeEvent(Lcom/google/gwt/user/client/Event;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)(event, "", newVal, "");
+	  		});
+	  	} catch(error) {
+	  		$wnd.alert('Пожалуйста убедитесь что требуемые js бибилотеки загружены и заново скомпилируйте gwt проект. ' + error);
+	  	}
 	}-*/;
 
 	private native void destroyDropDownWidget(String id) /*-{

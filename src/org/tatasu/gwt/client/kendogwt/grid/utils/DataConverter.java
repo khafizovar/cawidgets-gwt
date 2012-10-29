@@ -5,9 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 
 import org.tatasu.gwt.client.kendogwt.grid.options.GridOptions;
-import org.tatasu.gwt.client.kendogwt.grid.options.GridOptionsEnum;
-
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
@@ -30,7 +27,6 @@ public class DataConverter {
 	 */
 	public static JSONArray getJSObjectFromArrayHashMap(ArrayList<HashMap<String, Object>> data, GridOptions gridOptions) {
 		// / Инициализация модели данных
-		JSONObject dataS = new JSONObject();
 		JSONArray dataArr = new JSONArray();
 		int index2 = 0;
 		// Обход массива данных

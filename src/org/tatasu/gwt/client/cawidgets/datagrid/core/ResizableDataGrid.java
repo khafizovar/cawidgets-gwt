@@ -2,7 +2,6 @@ package org.tatasu.gwt.client.cawidgets.datagrid.core;
 
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.DataGrid;
-import com.google.gwt.user.cellview.client.DataGrid.Resources;
 
 public class ResizableDataGrid<T> extends DataGrid<T> {
     public ResizableDataGrid(int i, Resources tableRes) {

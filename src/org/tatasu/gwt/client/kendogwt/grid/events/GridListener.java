@@ -1,7 +1,5 @@
 package org.tatasu.gwt.client.kendogwt.grid.events;
 
-import org.tatasu.gwt.client.kendogwt.grid.events.change.GridChangeEvent;
-
 
 public interface GridListener {
 	/**

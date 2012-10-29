@@ -4,7 +4,7 @@ package org.tatasu.gwt.client.kendogwt.grid.column;
  * @author HafizovAR
  *
  */
-public class GridColumn {
+public class GridColumn  {
 	/** Используемое поле */
 	protected String field;
 	/** Наименование колонки */
@@ -25,6 +25,10 @@ public class GridColumn {
 	
 	//	private String template;	
 	//	private String format;
+	public GridColumn(String field) {
+		//super();
+		this.field = field.replaceAll(" ", "");
+	}
 	
 	/**
 	 * Конструктор

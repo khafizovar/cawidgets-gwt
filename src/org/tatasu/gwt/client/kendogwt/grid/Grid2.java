@@ -1,7 +1,6 @@
 package org.tatasu.gwt.client.kendogwt.grid;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 import org.tatasu.gwt.client.kendogwt.grid.column.GridColumn;
@@ -22,10 +21,8 @@ import org.tatasu.gwt.client.kendogwt.grid.utils.DataConverter;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
-import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
@@ -63,11 +60,20 @@ public class Grid2 extends Widget {
 	/** Массив слушателей событий dataBound */
 	private ArrayList<GridDataBoundListener>		dataBoundListeners		= new ArrayList<GridDataBoundListener>();
 
+	private boolean showEmpty = false;
+	public Grid2() {
+		super();
+		this.divElementId = "kendoGridDiv" + Math.round(Math.random() * 100000);
+		div = DOM.createDiv();
+		div.setId(divElementId);
+		this.setElement(div);
+		showEmpty = true;
+	}
 	public Grid2(GridOptions options, String elementId) {
 		super();
 		this.divElementId = elementId;
 		div = DOM.createDiv();
-		div.setId(elementId);
+		div.setId(divElementId);
 		this.setElement(div);
 
 		//this.dataProvider = options.getDatasource().getData();
@@ -78,7 +84,8 @@ public class Grid2 extends Widget {
 	@Override
 	protected void onLoad() {
 		super.onLoad();
-		createGrid();
+		if(!showEmpty)
+			createGrid();
 	}
 
 	protected void createGrid() {
@@ -95,7 +102,7 @@ public class Grid2 extends Widget {
 		options.put(GridOptionsEnum.Option.SCROLLABLE.getName(), JSONBoolean.getInstance(gridOptions.isScrollable()));
 		options.put(GridOptionsEnum.Option.RESIZABLE.getName(), JSONBoolean.getInstance(gridOptions.isResizable()));
 		
-		options.put("editable", JSONBoolean.getInstance(true));
+		//options.put("editable", JSONBoolean.getInstance(true));
 
 		// Установка колонок
 		JSONArray columnsArr = new JSONArray();
@@ -140,13 +147,13 @@ public class Grid2 extends Widget {
 	private native void createGrid(Grid2 grid, String id, JavaScriptObject options) /*-{
 		try {
 			
-			options.columns[2].editor = function (container, options) {
+			//options.columns[2].editor = function (container, options) {
 				//$wnd.alert(JSON.stringify(options));
-                    $wnd.$('<div id="calendar" style="width: 100%;">  <input id="datetimepicker" value="'+ options.model.datesample2 + '" style="width:200px;" /><div>').appendTo(container).kendoDateTimePicker({
+             //       $wnd.$('<div id="calendar" style="width: 100%;">  <input id="datetimepicker" value="'+ options.model.datesample2 + '" style="width:200px;" /><div>').appendTo(container).kendoDateTimePicker({
                     	//timeFormat: "HH:mm", //24 hours format
-                    	format: "dd.MM.yyyy hh:mm:ss",
-    					parseFormats: ["dd.MM.yyyy hh:mm:ss"] //format also will be added to parseFormats
-                    });
+             //       	format: "dd.MM.yyyy hh:mm:ss",
+    		//			parseFormats: ["dd.MM.yyyy hh:mm:ss"] //format also will be added to parseFormats
+             //       });
                     	
                       //  .appendTo(container)
                         //.kendoDropDownList({
@@ -158,7 +165,7 @@ public class Grid2 extends Widget {
                                 //}
                             //}
                         //});
-                };
+              //  };
 			options.dataBound = function(event) {
 				grid.@org.tatasu.gwt.client.kendogwt.grid.Grid2::fireDataBoundEvent(Lcom/google/gwt/user/client/Event;)(event);
 			};

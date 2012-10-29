@@ -1,6 +1,5 @@
 package org.tatasu.gwt.client.cawidgets.datagrid.core;
 
-import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.DataGrid;
 

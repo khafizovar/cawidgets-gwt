@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class GridHashMapParser {
 	
-	private ArrayList<HashMap<String, Object>> data;
+	
 	
 	/*public GridHashMapParser(ArrayList<HashMap<String, Object>> data) {
 		if(data == null || data.size() == 0) {
