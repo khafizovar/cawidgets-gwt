@@ -36,8 +36,6 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author HafizovAR
  * 
- *         TODO 1. Remove Item 2. Remove Item Event
- * 
  */
 public class Grid2 extends Widget {
 

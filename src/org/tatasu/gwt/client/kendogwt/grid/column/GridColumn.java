@@ -5,6 +5,11 @@ package org.tatasu.gwt.client.kendogwt.grid.column;
  *
  */
 public class GridColumn  {
+	
+	//public static final String DATE_TYPE = "date";
+	//public static final String NUMBER_TYPE = "number";
+	//public static final String STRING_TYPE = "string"; 
+	
 	/** Используемое поле */
 	protected String field;
 	/** Наименование колонки */
@@ -15,6 +20,8 @@ public class GridColumn  {
 	protected boolean visible = true;
 	/** Порядковый номер колонки */
 	protected int indexNumber = -1;
+	
+	//protected String type = null;
 	
 	protected boolean encoded = false;
 	protected boolean scrollable = true;
