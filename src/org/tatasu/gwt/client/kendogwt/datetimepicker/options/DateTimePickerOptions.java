@@ -32,12 +32,12 @@ public class DateTimePickerOptions {
 	/**
 	 * Example "MM/dd/yyyy hh:mm:ss tt"
 	 */
-	private String format = null;
+	private String format = "dd.MM.yyyy HH:mm";
 	
 	/**
 	 * Example "hh:mm:ss"
 	 */
-	private String timeFormat = null;
+	private String timeFormat = "HH:mm:ss";
 	
 	private String start = null;
 	

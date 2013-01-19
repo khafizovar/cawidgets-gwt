@@ -5,6 +5,7 @@ import java.util.Date;
 import org.tatasu.gwt.client.kendogwt.datetimepicker.options.DateTimePickerOptions;
 import org.tatasu.gwt.client.kendogwt.datetimepicker.options.DateTimePickerOptionsEnum;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsDate;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
@@ -55,9 +56,6 @@ public class DateTimePicker extends Widget {
 				if(options.getMinimum() != null )
 					optionsJs.put(DateTimePickerOptionsEnum.Options.MINIMUM.getName(), new JSONNumber(options.getMinimum().getTime()));
 				
-				if(options.getValue() != null )
-					optionsJs.put(DateTimePickerOptionsEnum.Options.VALUE.getName(), new JSONNumber(options.getValue().getTime()));
-				
 				if(options.getFormat() != null )
 					optionsJs.put(DateTimePickerOptionsEnum.Options.FORMAT.getName(), new JSONString(options.getFormat()));
 				
@@ -74,6 +72,10 @@ public class DateTimePicker extends Widget {
 					optionsJs.put(DateTimePickerOptionsEnum.Options.TIMEFORMAT.getName(), new JSONString(options.getStart()));
 		
 				createDateTimePickerJS(this, divElementId, inputElementId, null);	
+				
+				if(options.getValue() != null )
+					setValueJS(JsDate.create((options.getValue().getTime())), inputElementId);
+					//optionsJs.put(DateTimePickerOptionsEnum.Options.VALUE.getName(), new JSONNumber(options.getValue().getTime()));
 	}
 	/**
 	 * Метод создания js дататаймпикера
@@ -83,6 +85,7 @@ public class DateTimePicker extends Widget {
 	 * @param options			объект опций
 	 */
 	private native void createDateTimePickerJS(DateTimePicker parent, String divId, String inputElementId, JavaScriptObject options) /*-{
+				//$wnd.alert(options);
 				$wnd.$("#" + inputElementId).kendoDateTimePicker(options);				
 	}-*/;
 	
@@ -99,11 +102,21 @@ public class DateTimePicker extends Widget {
 	 * @return
 	 */
 	private native double getValueJs(String inputElementId) /*-{
-		return $wnd.$("#" + inputElementId).data("kendoDateTimePicker").value($wnd.$("#value").val()).getTime();
+		return $wnd.$("#" + inputElementId).data("kendoDateTimePicker").value().getTime();
 	}-*/;
 	
-	public void SetValue(Date date) {
-		
+	public void setValue(Date date) {
+		setValueJS(JsDate.create((date.getTime())), inputElementId);
 	}
+	
+	private native void setValueJS(JsDate longValue, String inputElementId) /*-{
+		try  {
+		//var sendingDate = longValue;
+		//$wnd.alert(sendingDate);
+		$wnd.$("#" + inputElementId).data("kendoDateTimePicker").value(new Date());
+		} catch (error) {
+			$wnd.alert(error);
+		}
+	}-*/; 
 	
 }
