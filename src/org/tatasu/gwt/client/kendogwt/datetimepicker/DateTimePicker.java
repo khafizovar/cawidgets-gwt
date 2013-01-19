@@ -111,8 +111,6 @@ public class DateTimePicker extends Widget {
 	
 	private native void setValueJS(JsDate longValue, String inputElementId) /*-{
 		try  {
-		//var sendingDate = longValue;
-		//$wnd.alert(sendingDate);
 		$wnd.$("#" + inputElementId).data("kendoDateTimePicker").value(new Date());
 		} catch (error) {
 			$wnd.alert(error);
