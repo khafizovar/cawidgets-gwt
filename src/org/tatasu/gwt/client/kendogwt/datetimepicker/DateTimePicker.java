@@ -46,9 +46,9 @@ public class DateTimePicker extends Widget {
 	}
 	
 	private void createDateTimePicker() {
-				// Родительские опции датагрида
+				// Родительские опции DateTimePicker
 				JSONObject optionsJs = new JSONObject();
-
+				
 				// Установка опций дата грида
 				if(options.getMaximum() != null) 
 					optionsJs.put(DateTimePickerOptionsEnum.Options.MAXIMUM.getName(), new JSONNumber(options.getMaximum().getTime()));
@@ -69,24 +69,45 @@ public class DateTimePicker extends Widget {
 					optionsJs.put(DateTimePickerOptionsEnum.Options.START.getName(), new JSONString(options.getStart()));
 				
 				if(options.getTimeFormat() != null)
-					optionsJs.put(DateTimePickerOptionsEnum.Options.TIMEFORMAT.getName(), new JSONString(options.getStart()));
+					optionsJs.put(DateTimePickerOptionsEnum.Options.TIMEFORMAT.getName(), new JSONString(options.getTimeFormat()));
 		
-				createDateTimePickerJS(this, divElementId, inputElementId, null);	
+				createDateTimePickerJS(this, divElementId, inputElementId, optionsJs.getJavaScriptObject());	
 				
 				if(options.getValue() != null )
 					setValueJS(JsDate.create((options.getValue().getTime())), inputElementId);
 					//optionsJs.put(DateTimePickerOptionsEnum.Options.VALUE.getName(), new JSONNumber(options.getValue().getTime()));
 	}
 	/**
-	 * Метод создания js дататаймпикера
+	 * Метод создания js дататаймпикера sdfsdfsdfddwdsdsfsSDFFDSF	'sgd;ldf;lmg;sdalkfj;dslSdfsdSDfsdfsdf
 	 * @param parent			класс родителя
 	 * @param divId				идентификатор div контейнера
 	 * @param inputElementId	идентификатор input 
 	 * @param options			объект опций
 	 */
 	private native void createDateTimePickerJS(DateTimePicker parent, String divId, String inputElementId, JavaScriptObject options) /*-{
-				//$wnd.alert(options);
-				$wnd.$("#" + inputElementId).kendoDateTimePicker(options);				
+				try {	
+					var nativeOptions = Object();
+					var nullValue = null;
+					
+					if(options.max != nullValue) 
+						nativeOptions.max = new $wnd.Date(options.max);
+					if(options.min != nullValue) 
+						nativeOptions.min = new $wnd.Date(options.min);
+					if(options.format != nullValue )
+						nativeOptions.min = new $wnd.Date(options.min);
+					if(options.interval != nullValue )
+						nativeOptions.interval = options.interval;
+					if(options.depth != nullValue)
+						nativeOptions.depth = options.depth;
+					if(options.start != nullValue)
+						nativeOptions.start = options.start;
+					if(options.timeFormat != nullValue)
+						nativeOptions.timeFormat = options.timeFormat;
+					
+					$wnd.$("#" + inputElementId).kendoDateTimePicker(nativeOptions);
+				} catch (error) {
+					$wnd.alert(error);
+				}
 	}-*/;
 	
 	/**
@@ -104,14 +125,17 @@ public class DateTimePicker extends Widget {
 	private native double getValueJs(String inputElementId) /*-{
 		return $wnd.$("#" + inputElementId).data("kendoDateTimePicker").value().getTime();
 	}-*/;
-	
+	/**
+ * 
+	 * @param date
+	 */
 	public void setValue(Date date) {
 		setValueJS(JsDate.create((date.getTime())), inputElementId);
 	}
 	
 	private native void setValueJS(JsDate longValue, String inputElementId) /*-{
 		try  {
-		$wnd.$("#" + inputElementId).data("kendoDateTimePicker").value(new Date());
+			$wnd.$("#" + inputElementId).data("kendoDateTimePicker").value(new $wnd.Date(longValue));
 		} catch (error) {
 			$wnd.alert(error);
 		}

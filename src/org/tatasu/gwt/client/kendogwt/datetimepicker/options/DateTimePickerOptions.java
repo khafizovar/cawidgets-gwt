@@ -30,20 +30,20 @@ public class DateTimePickerOptions {
 	 */
 	private Date value = null;	
 	/**
-	 * Example "MM/dd/yyyy hh:mm:ss tt"
+	 * Example "MM/dd/yyyy hh:mm:ss tt" 
 	 */
-	private String format = "dd.MM.yyyy HH:mm";
+	private String format = "dd.MM.yyyy HH:mm:ss";
 	
 	/**
-	 * Example "hh:mm:ss"
+	 * Example "hh:mm:ss" 
 	 */
-	private String timeFormat = "HH:mm:ss";
+	private String timeFormat = "HH:mm";
 	
 	private String start = null;
 	
 	private String depth = null;
 	
-	private Integer interval = 1;
+	private Integer interval = 5;
 	
 	public DateTimePickerOptions() { }
 	
