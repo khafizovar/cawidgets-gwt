@@ -1,6 +1,6 @@
 package org.tatasu.gwt.client.kendogwt.datetimepicker.options;
 /**
- * Класс 
+ * Класс с описанием js наименований опций виджета DateTimePicker
  * @author mol4un
  *
  */

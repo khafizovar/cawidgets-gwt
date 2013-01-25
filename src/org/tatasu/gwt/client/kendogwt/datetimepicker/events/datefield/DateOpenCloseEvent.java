@@ -1,4 +1,4 @@
-package org.tatasu.gwt.client.kendogwt.datetimepicker.events.dateopen;
+package org.tatasu.gwt.client.kendogwt.datetimepicker.events.datefield;
 
 import java.util.Date;
 
@@ -9,7 +9,7 @@ import com.google.gwt.user.client.Event;
  * Событие открытия виджета DateTimePicker, поле даты
  * @author mol4un
  */
-public class DateOpenEvent {
+public class DateOpenCloseEvent {
 	
 	private DateTimePicker source;
 	private Event event;
@@ -18,7 +18,7 @@ public class DateOpenEvent {
 	 * @param event		Событие
 	 * @param source	Источник события
 	 */
-	public DateOpenEvent(Event event, DateTimePicker source) {
+	public DateOpenCloseEvent(Event event, DateTimePicker source) {
 		this.event = event;
 		this.source = source;
 	}

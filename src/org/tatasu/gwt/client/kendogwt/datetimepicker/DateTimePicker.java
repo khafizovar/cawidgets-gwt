@@ -1,30 +1,37 @@
 package org.tatasu.gwt.client.kendogwt.datetimepicker;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 import org.tatasu.gwt.client.kendogwt.datetimepicker.events.datechange.DateChangeEvent;
 import org.tatasu.gwt.client.kendogwt.datetimepicker.events.datechange.DateChangeListener;
-import org.tatasu.gwt.client.kendogwt.datetimepicker.events.dateopen.DateOpenEvent;
-import org.tatasu.gwt.client.kendogwt.datetimepicker.events.dateopen.DateOpenListener;
-import org.tatasu.gwt.client.kendogwt.datetimepicker.events.timeopen.TimeOpenEvent;
-import org.tatasu.gwt.client.kendogwt.datetimepicker.events.timeopen.TimeOpenListener;
+import org.tatasu.gwt.client.kendogwt.datetimepicker.events.datefield.DateCloseListener;
+import org.tatasu.gwt.client.kendogwt.datetimepicker.events.datefield.DateOpenCloseEvent;
+import org.tatasu.gwt.client.kendogwt.datetimepicker.events.datefield.DateOpenListener;
+import org.tatasu.gwt.client.kendogwt.datetimepicker.events.timefield.TimeCloseListener;
+import org.tatasu.gwt.client.kendogwt.datetimepicker.events.timefield.TimeOpenCloseEvent;
+import org.tatasu.gwt.client.kendogwt.datetimepicker.events.timefield.TimeOpenListener;
 import org.tatasu.gwt.client.kendogwt.datetimepicker.options.DateTimePickerOptions;
 import org.tatasu.gwt.client.kendogwt.datetimepicker.options.DateTimePickerOptionsEnum;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsDate;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.i18n.client.TimeZone;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.datepicker.client.CalendarUtil;
+
+/**
+ * TODO 25.01.2013
+ * Не реализовано -
+ * 	 custom templates for months
+ * 	 rtl
+ * 	 keyboard navigation
+ */
+
 /**
  * GWT обертка web виджета kendo ui DateTimePicker 
  * @author mol4un
@@ -42,13 +49,21 @@ public class DateTimePicker extends Widget {
 	private String 					inputElementId;
 	/** Локальная переменная опции виджета DateTimePicker */ 
 	private DateTimePickerOptions 	options;
-	/** Список слушателей события смены даты */
-	ArrayList<DateChangeListener> dateChangeListeners = new ArrayList<DateChangeListener>();
-	/** Список слушателей события открытия поля даты */
-	ArrayList<DateOpenListener> dateOpenListeners = new ArrayList<DateOpenListener>();
-	/** Список слушателей события открытия поля времени */
-	ArrayList<TimeOpenListener> timeOpenListeners = new ArrayList<TimeOpenListener>();
 	
+	/** Список слушателей события смены даты */
+	ArrayList<DateChangeListener> 	dateChangeListeners = new ArrayList<DateChangeListener>();
+	/** Список слушателей события открытия поля даты */
+	ArrayList<DateOpenListener> 	dateOpenListeners = new ArrayList<DateOpenListener>();
+	/**Список слушателей события закрытия поля даты */
+	ArrayList<DateCloseListener> 	dateCloseListeners = new ArrayList<DateCloseListener>();
+	/** Список слушателей события открытия поля времени */
+	ArrayList<TimeOpenListener> 	timeOpenListeners = new ArrayList<TimeOpenListener>();
+	/** Список слушателей события закрытия поля времени */
+	ArrayList<TimeCloseListener> 	timeCloseListeners = new ArrayList<TimeCloseListener>();
+	/**
+	 * Конструктор
+	 * @param options	опции виджета
+	 */
 	public DateTimePicker(DateTimePickerOptions options) {
 		super();
 		this.options = options;
@@ -67,8 +82,10 @@ public class DateTimePicker extends Widget {
 		super.onLoad();
 		createDateTimePicker();
 	}
-	
-	private void createDateTimePicker() {
+	/**
+	 * Метод создания виджета
+	 */
+	protected void createDateTimePicker() {
 				// Родительские опции DateTimePicker
 				JSONObject optionsJs = new JSONObject(); 
 				
@@ -95,10 +112,11 @@ public class DateTimePicker extends Widget {
 					optionsJs.put(DateTimePickerOptionsEnum.Options.TIMEFORMAT.getName(), new JSONString(options.getTimeFormat()));
 		
 				createDateTimePickerJS(this, divElementId, inputElementId, optionsJs.getJavaScriptObject());	
+				
 				if(options.getValue() != null )
 					setValueJS(JsDate.create((options.getValue().getTime())), inputElementId);
-					//optionsJs.put(DateTimePickerOptionsEnum.Options.VALUE.getName(), new JSONNumber(options.getValue().getTime()));
 	}
+	
 	/**
 	 * Метод создания js дататаймпикера 
 	 * @param parent			класс родителя
@@ -116,7 +134,8 @@ public class DateTimePicker extends Widget {
 						options.max = new $wnd.Date(options.max);
 					if(options.min != nullValue) 
 						options.min = new $wnd.Date(options.min); 
-						
+					
+					//js обработчик смены установленной даты
 					options.change = function(event) {
 						try {
 							//$wnd.alert(this.value() + " " + this.value().getTime() + " " + this.value().getTimezoneOffset());
@@ -125,16 +144,28 @@ public class DateTimePicker extends Widget {
 							$wnd.alert(error);
 						}
 					};
-					
+					//js обработчик открытия виджетов поля даты и времени
 					options.open = function(event) {
 						try {
 							//$wnd.alert(this.value() + " " + this.value().getTime() + " " + this.value().getTimezoneOffset());
+							if(event.view === dateView) {	//генерируем событие смены Даты
+								parent.@org.tatasu.gwt.client.kendogwt.datetimepicker.DateTimePicker::fireDateCloseEvent(Lcom/google/gwt/user/client/Event;)(event);
+							} else if (event.view === timeView) {
+								parent.@org.tatasu.gwt.client.kendogwt.datetimepicker.DateTimePicker::fireTimeCloseEvent(Lcom/google/gwt/user/client/Event;)(event);
+							}
+								
+						} catch (error) {
+							$wnd.alert(error);
+						}
+					};
+					//js обработчик закрытия виджетов поля даты и времени
+					options.close = function(event) {
+						try {
 							if(event.view === dateView) {	//генерируем событие смены Даты
 								parent.@org.tatasu.gwt.client.kendogwt.datetimepicker.DateTimePicker::fireDateOpenEvent(Lcom/google/gwt/user/client/Event;)(event);
 							} else if (event.view === timeView) {
 								parent.@org.tatasu.gwt.client.kendogwt.datetimepicker.DateTimePicker::fireTimeOpenEvent(Lcom/google/gwt/user/client/Event;)(event);
 							}
-								
 						} catch (error) {
 							$wnd.alert(error);
 						}
@@ -190,6 +221,7 @@ public class DateTimePicker extends Widget {
 	public void addDateChangeEventListener(DateChangeListener listener) {
 		dateChangeListeners.add(listener);
 	}
+	
 	/**
 	 * Разрегистрация слушателя смены даты 
 	 * @param listener слушатель смены даты которого необходимо разрегистрировать
@@ -205,6 +237,7 @@ public class DateTimePicker extends Widget {
 	public void addOpenEventListener(DateOpenListener listener) {
 		dateOpenListeners.add(listener);
 	}
+	
 	/**
 	 * Разрегистрация слушателя открытия поля даты
 	 * @param listener слушатель
@@ -212,6 +245,7 @@ public class DateTimePicker extends Widget {
 	public void removeOpenEventListener(DateOpenListener listener) {
 		dateOpenListeners.remove(listener);
 	}
+	
 	/**
 	 * Регистрация слушателя события открытия поля времени 
 	 * @param listener слушатель
@@ -219,6 +253,7 @@ public class DateTimePicker extends Widget {
 	public void addTimeOpenEventListener(TimeOpenListener listener) {
 		timeOpenListeners.add(listener);
 	}
+	
 	/**
 	 * Разрегистрация слушателя события открытия поля времени
 	 * @param listener слушатель
@@ -226,13 +261,46 @@ public class DateTimePicker extends Widget {
 	public void removeTimeOpenListener(TimeOpenListener listener) {
 		timeOpenListeners.remove(listener);
 	}
+	
+	/**
+	 * Регистрация сулашетля закрытия поля со временем
+	 * @param listener	слушатель
+	 */
+	public void addDateCloseListener(DateCloseListener listener) {
+		dateCloseListeners.add(listener);
+	}
+	
+	/**
+	 * Метод разрегистрации слушателя события закрытия поля с датой
+	 * @param listener слушатель
+	 */
+	public void removeDateCloseListener(DateCloseListener listener) {
+		dateCloseListeners.remove(listener);
+	}
+	
+	/**
+	 * Метод регистрации слушателя событий закрытия поля с датой
+	 * @param listener слушатель
+	 */
+	public void addTimeCloseListener(TimeCloseListener listener) {
+		timeCloseListeners.add(listener);
+	}
+	
+	/**
+	 * Метод разрегистрации слушателя событий закрытия поля с временем 
+	 * @param listener
+	 */
+	public void removeTimeCloseListener(TimeCloseListener listener) {
+		timeCloseListeners.remove(listener);
+	}
+	
 	/****************************************** Методы "выстрела" событий ********************************/
 	/**
 	 * Генерируем событие смены даты
 	 * @param event		Событие
 	 * @param value		Новое значение установелнной даты
 	 */
-	private void fireDateChangeEvent(Event event, double value) {
+	protected void fireDateChangeEvent(Event event, double value) {
 		//TimeZone timeZone = TimeZone.createTimeZone(new Date().getTimezoneOffset()); 
 		//Window.alert(timeZone.getLongName(new Date()));
 		//Window.alert(value + " " + new Double(value).longValue() + new Date(new Double(value).longValue()) + new Date(new Double(value).longValue()).getTimezoneOffset());
@@ -248,22 +316,45 @@ public class DateTimePicker extends Widget {
 	 * Генерируем событие открытия поля даты
 	 * @param event событие
 	 */
-	private void fireDateOpenEvent(Event event) {
-		DateOpenEvent eventJ = new DateOpenEvent(event, this);
+	protected void fireDateOpenEvent(Event event) {
+		DateOpenCloseEvent eventJ = new DateOpenCloseEvent(event, this);
 		
 		for(DateOpenListener listener : dateOpenListeners) {
 			listener.onDateOpen(eventJ);
 		}
 	}
 	/**
+	 * Генерируем событие закрытия поля даты
+	 * @param event
+	 */
+	protected void fireDateCloseEvent(Event event) {
+		DateOpenCloseEvent eventJ = new DateOpenCloseEvent(event, this);
+		
+		for(DateCloseListener listener : dateCloseListeners) {
+			listener.onDateClose(eventJ);
+		}
+	}
+	
+	/**
 	 * Генерируем событие открытия поля времени
 	 * @param event событие
 	 */
-	private void fireTimeOpenEvent(Event event) {
-		TimeOpenEvent eventJ = new TimeOpenEvent(event, this);
+	protected void fireTimeOpenEvent(Event event) {
+		TimeOpenCloseEvent eventJ = new TimeOpenCloseEvent(event, this);
 		
 		for(TimeOpenListener listener : timeOpenListeners) {
-			listener.onTimeOnOpen(eventJ);
+			listener.onTimeOpen(eventJ);
+		}
+	}
+	/**
+	 * Генерируем событие закрытия поля с временем
+	 * @param event
+	 */
+	protected void fireTimeCloseEvent(Event event) {
+		TimeOpenCloseEvent eventJ = new TimeOpenCloseEvent(event, this);
+		
+		for(TimeCloseListener listener : timeCloseListeners) {
+			listener.onTimeClose(eventJ);
 		}
 	}
 }
