@@ -32,7 +32,7 @@ public class DatePickerOptions {
 	/**
 	 * Example "MM/dd/yyyy hh:mm:ss tt"
 	 */
-	private String				format			= "dd.MM.yyyy HH:mm:ss";
+	private String				format			= "dd.MM.yyyy";
 
 	private String				start			= null;
 

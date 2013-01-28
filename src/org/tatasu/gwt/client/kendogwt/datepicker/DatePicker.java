@@ -1,10 +1,14 @@
 package org.tatasu.gwt.client.kendogwt.datepicker;
 
+import java.util.ArrayList;
 import java.util.Date;
 
+import org.tatasu.gwt.client.kendogwt.datepicker.events.datechange.DatePickerChangeEvent;
+import org.tatasu.gwt.client.kendogwt.datepicker.events.datechange.DatePickerChangeListener;
+import org.tatasu.gwt.client.kendogwt.datepicker.events.datefield.DatePickerCloseListener;
+import org.tatasu.gwt.client.kendogwt.datepicker.events.datefield.DatePickerOpenCloseEvent;
+import org.tatasu.gwt.client.kendogwt.datepicker.events.datefield.DatePickerOpenListener;
 import org.tatasu.gwt.client.kendogwt.datepicker.options.DatePickerOptions;
-import org.tatasu.gwt.client.kendogwt.datetimepicker.DateTimePicker;
-import org.tatasu.gwt.client.kendogwt.datetimepicker.options.DateTimePickerOptions;
 import org.tatasu.gwt.client.kendogwt.datetimepicker.options.DateTimePickerOptionsEnum;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -14,6 +18,7 @@ import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -32,6 +37,12 @@ public class DatePicker extends Widget {
 	private String 					inputElementId;
 	/** Локальная переменная опции виджета DateTimePicker */ 
 	private DatePickerOptions 	options;
+	/** Список слушателей смены даты */
+	private ArrayList<DatePickerChangeListener> changeListener = new ArrayList<DatePickerChangeListener>();
+	/** Список слушателей открытия поля даты */
+	private ArrayList<DatePickerOpenListener> openListener = new ArrayList<DatePickerOpenListener>();
+	/** Список слушателей закрытия поля даты */
+	private ArrayList<DatePickerCloseListener> closeListener = new ArrayList<DatePickerCloseListener>();
 	
 	/**
 	 * Конструктор
@@ -105,8 +116,7 @@ public class DatePicker extends Widget {
 					//js обработчик смены установленной даты
 					options.change = function(event) {
 						try {
-							//$wnd.alert(this.value() + " " + this.value().getTime() + " " + this.value().getTimezoneOffset());
-							parent.@org.tatasu.gwt.client.kendogwt.datetimepicker.DateTimePicker::fireDateChangeEvent(Lcom/google/gwt/user/client/Event;D)(event, this.value().getTime());
+							parent.@org.tatasu.gwt.client.kendogwt.datepicker.DatePicker::fireDateChangeEvent(Lcom/google/gwt/user/client/Event;D)(event, this.value().getTime());
 						} catch (error) {
 							$wnd.alert(error);
 						}
@@ -114,8 +124,7 @@ public class DatePicker extends Widget {
 					//js обработчик открытия виджетов поля даты и времени
 					options.open = function(event) {
 						try {
-							//$wnd.alert(this.value() + " " + this.value().getTime() + " " + this.value().getTimezoneOffset());
-							//parent.@org.tatasu.gwt.client.kendogwt.datetimepicker.DateTimePicker::fireDateCloseEvent(Lcom/google/gwt/user/client/Event;)(event);
+							parent.@org.tatasu.gwt.client.kendogwt.datepicker.DatePicker::fireDateCloseEvent(Lcom/google/gwt/user/client/Event;)(event);
 						} catch (error) {
 							$wnd.alert(error);
 						}
@@ -123,7 +132,7 @@ public class DatePicker extends Widget {
 					//js обработчик закрытия виджетов поля даты и времени
 					options.close = function(event) {
 						try {
-								parent.@org.tatasu.gwt.client.kendogwt.datetimepicker.DateTimePicker::fireDateOpenEvent(Lcom/google/gwt/user/client/Event;)(event);							
+							parent.@org.tatasu.gwt.client.kendogwt.datepicker.DatePicker::fireDateOpenEvent(Lcom/google/gwt/user/client/Event;)(event);							
 						} catch (error) {
 							$wnd.alert(error);
 						}
@@ -134,4 +143,125 @@ public class DatePicker extends Widget {
 					$wnd.alert(error);
 				}
 	}-*/;
+	
+	/**
+	 * Получить текущее значение даты
+	 * @return
+	 */
+	public Date getValue() {
+		return new Date(new Double(getValueJs(inputElementId)).longValue());
+	}
+	/**
+	 * Получить текущее значение из JS
+	 * @param inputElementId
+	 * @return
+	 */
+	private native double getValueJs(String inputElementId) /*-{
+		return $wnd.$("#" + inputElementId).data("kendoDatePicker").value().getTime();
+	}-*/;
+	/**
+	 * Установка значения виджета
+	 * @param date	значение даты для установки
+	 */
+	public void setValue(Date date) {
+		setValueJS(JsDate.create((date.getTime())), inputElementId);
+	}
+	/**
+	 * Нативный метод установки даты
+	 * @param longValue			Передача даты осуществляется значением в миллисекундах
+	 * @param inputElementId	Идентификатор элемента input выступающего базой для виджета
+	 */
+	private native void setValueJS(JsDate longValue, String inputElementId) /*-{
+		try  {
+			$wnd.$("#" + inputElementId).data("kendoDatePicker").value(new $wnd.Date(longValue));
+		} catch (error) {
+			$wnd.alert(error);
+		}
+	}-*/; 
+	
+	
+	/****************************************** События регистрации/отписки ***************************************/
+	/**
+	 * Регистрация слушателя смены даты
+	 * @param listener	слушатель смены даты
+	 */
+	public void addDateChangeEventListener(DatePickerChangeListener listener) {
+		changeListener.add(listener);
+	}
+	
+	/**
+	 * Разрегистрация слушателя смены даты 
+	 * @param listener слушатель смены даты которого необходимо разрегистрировать
+	 */
+	public void removeDateChangeEventListener(DatePickerChangeListener listener) {
+		changeListener.remove(listener);
+	}
+	
+	/**
+	 * Регистрация слушателей открытия поля даты 
+	 * @param listener	слушатель
+	 */
+	public void addOpenEventListener(DatePickerOpenListener listener) {
+		openListener.add(listener);
+	}
+	
+	/**
+	 * Разрегистрация слушателя открытия поля даты
+	 * @param listener слушатель
+	 */
+	public void removeOpenEventListener(DatePickerOpenListener listener) {
+		openListener.remove(listener);
+	}
+	
+	/**
+	 * Регистрация сулашетля закрытия поля со временем
+	 * @param listener	слушатель
+	 */
+	public void addDateCloseListener(DatePickerCloseListener listener) {
+		closeListener.add(listener);
+	}
+	
+	/**
+	 * Метод разрегистрации слушателя события закрытия поля с датой
+	 * @param listener слушатель
+	 */
+	public void removeDateCloseListener(DatePickerCloseListener listener) {
+		closeListener.remove(listener);
+	}
+	
+	/****************************************** Методы "выстрела" событий ********************************/
+	/**
+	 * Генерируем событие смены даты
+	 * @param event		Событие
+	 * @param value		Новое значение установелнной даты
+	 */
+	protected void fireDateChangeEvent(Event event, double value) {
+		DatePickerChangeEvent eventJ = new DatePickerChangeEvent(event, this, new Date(new Double(value).longValue()));
+
+		for (DatePickerChangeListener listener : changeListener) {
+			listener.onDateChange(eventJ);
+		}
+	}
+	/**
+	 * Генерируем событие открытия поля даты
+	 * @param event событие
+	 */
+	protected void fireDateOpenEvent(Event event) {
+		DatePickerOpenCloseEvent eventJ = new DatePickerOpenCloseEvent(event, this);
+		
+		for(DatePickerOpenListener listener : openListener) {
+			listener.onDatePickerOpen(eventJ);
+		}
+	}
+	/**
+	 * Генерируем событие закрытия поля даты
+	 * @param event
+	 */
+	protected void fireDateCloseEvent(Event event) {
+		DatePickerOpenCloseEvent eventJ = new DatePickerOpenCloseEvent(event, this);
+		
+		for(DatePickerCloseListener listener : closeListener) {
+			listener.onDatePickerClose(eventJ);
+		}
+	}
 }
