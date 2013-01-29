@@ -1,8 +1,5 @@
 package org.tatasu.gwt.client.kendogwt.datetimepicker.events.timefield;
 
-
-import java.util.Date;
-
 import org.tatasu.gwt.client.kendogwt.datetimepicker.DateTimePicker;
 
 import com.google.gwt.user.client.Event;

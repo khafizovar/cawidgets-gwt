@@ -22,6 +22,9 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * TODO Нет реализации template
+ */
+/**
  * GWT обертка для виджета DatePicker kendo ui
  * @author HafizovAR
  *
@@ -91,8 +94,8 @@ public class DatePicker extends Widget {
 				
 				createDatePickerJS(this, divElementId, inputElementId, optionsJs.getJavaScriptObject());	
 				
-				//if(options.getValue() != null )
-				//	setValueJS(JsDate.create((options.getValue().getTime())), inputElementId);
+				if(options.getValue() != null )
+					setValueJS(JsDate.create((options.getValue().getTime())), inputElementId);
 	}
 	
 	/**
