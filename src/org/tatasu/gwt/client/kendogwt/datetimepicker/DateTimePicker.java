@@ -17,6 +17,7 @@ import org.tatasu.gwt.client.kendogwt.datetimepicker.options.DateTimePickerOptio
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsDate;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
@@ -212,7 +213,15 @@ public class DateTimePicker extends Widget {
 		}
 	}-*/; 
 	
-	
+	/**
+	 * Возвращает текстовое представление даты в указанном формате 
+	 * @return значение даты
+	 */
+	public String getTextualDate() {
+		DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat(options.getFormat()); //pattern is a string       //which represents which pattern you want to use
+		String formattedDateString = dateTimeFormat.format(getValue());	
+		return formattedDateString;
+	}
 	/****************************************** События регистрации/отписки ***************************************/
 	/**
 	 * Регистрация слушателя смены даты
