@@ -4,25 +4,25 @@ import java.io.Serializable;
 
 /**
  * Единица данных для графика TreeMapChart
+ * 
  * @author HafizovAR
- *
+ * 
  */
 public class TreeMapChartData implements Serializable {
-
 
 	/**	 */
 	private static final long	serialVersionUID	= 1L;
 	/** Наименование объекта */
-	private String	Name;
+	private String				Name;
 	/** Родитель объекта (Будут объединены по родителю) */
-	private String	Parent;
+	private String				Parent;
 	/** Размер на полотне графика */
-	private double		size;
+	private double				size;
 	/** Цвет на полотне графика */
-	private double		color;
+	private double				color;
+	private String				popUpString			= "";
 
-	public TreeMapChartData() { }
-	
+	public TreeMapChartData() {}
 	public TreeMapChartData(String name, String parent, double size, double color) {
 		super();
 		Name = name;
@@ -30,7 +30,6 @@ public class TreeMapChartData implements Serializable {
 		this.size = size;
 		this.color = color;
 	}
-	
 	public String getName() {
 		return Name;
 	}
@@ -54,5 +53,11 @@ public class TreeMapChartData implements Serializable {
 	}
 	public void setColor(double color) {
 		this.color = color;
+	}
+	public String getPopUpString() {
+		return popUpString;
+	}
+	public void setPopUpString(String popUpString) {
+		this.popUpString = popUpString;
 	}
 }
