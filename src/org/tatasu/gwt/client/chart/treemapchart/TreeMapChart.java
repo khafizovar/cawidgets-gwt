@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.tatasu.gwt.client.chart.treemapchart.events.TreeMapChartClickListener;
 import org.tatasu.gwt.client.chart.treemapchart.events.TreeMapChartEvent;
 import org.tatasu.gwt.client.chart.treemapchart.events.TreeMapChartEventTypes;
+import org.tatasu.gwt.client.chart.treemapchart.events.TreeMapChartMouseClickEvent;
 import org.tatasu.gwt.client.chart.treemapchart.events.TreeMapChartOnMouseOutListener;
 import org.tatasu.gwt.client.chart.treemapchart.events.TreeMapChartOnMouseOverListener;
 import org.tatasu.gwt.client.chart.treemapchart.events.TreeMapChartReadyListener;
@@ -55,6 +57,8 @@ public class TreeMapChart extends Widget {
 	private ArrayList<TreeMapChartRollupListener>		rollUpListeners			= new ArrayList<TreeMapChartRollupListener>();
 	/** Список слушателей события select */
 	private ArrayList<TreeMapChartSelectListener>		selectListeners			= new ArrayList<TreeMapChartSelectListener>();
+	/** Список слушателей событи я mouseclick*/
+	private ArrayList<TreeMapChartClickListener>		clickListener			= new ArrayList<TreeMapChartClickListener>();
 
 	/**
 	 * Конструктор
@@ -127,47 +131,64 @@ public class TreeMapChart extends Widget {
 	private native JavaScriptObject createTreeMapChartJS(TreeMapChart parent, String divElementId2, JavaScriptObject javaScriptObject, String value) /*-{		
 			var data = $wnd.google.visualization.arrayToDataTable(eval(value));
 			var tree = new $wnd.google.visualization.TreeMap($wnd.document.getElementById(divElementId2));
+			// Mouse coordinates for event.clientX, event.clientY respectively.
+			var myClientX, myClientY;
+			var currentObject = null;
+			
 			//Подписка на события готовности графика			
 			$wnd.google.visualization.events
 					.addListener(
 							tree,
 							'ready',
 							function() {
-								$wnd.console.log("ready");
-								parent.@org.tatasu.gwt.client.chart.treemapchart.TreeMapChart::fireEvent(Lcom/google/gwt/user/client/Event;Ljava/lang/String;)(event, 'ready');
+								var svg = $wnd.document.querySelector('#' + divElementId2 + ' svg');																							
+								svg.addEventListener('mousemove',function(evt){
+								  //$wnd.console.log(evt);
+								  myClientX = evt.x;
+								  myClientY = evt.y;
+								  parent.@org.tatasu.gwt.client.chart.treemapchart.TreeMapChart::fireEvent(Lcom/google/gwt/user/client/Event;Ljava/lang/String;III)(event, 'onmouseover', currentObject, myClientX, myClientY);
+								},false);
+								svg.addEventListener('mousedown', function(evt){
+									$wnd.console.log(evt);
+									var altKeyI = (evt.altKey) ? 1 :0 ;
+									var shiftKeyI = (evt.shiftKey) ? 1 :0 ;
+									parent.@org.tatasu.gwt.client.chart.treemapchart.TreeMapChart::fireClickEvent(Lcom/google/gwt/user/client/Event;Ljava/lang/String;IIIIII)(event, 'onmouseover', currentObject,  evt.x, evt.y, evt.button, altKeyI, shiftKeyI );
+									evt.preventDefault();
+									evt.stopPropagation();
+								});
+								parent.@org.tatasu.gwt.client.chart.treemapchart.TreeMapChart::fireEvent(Lcom/google/gwt/user/client/Event;Ljava/lang/String;III)(event, 'ready', -1, 0, 0);
 							});
 			//Подписка на событие навигации по уровню вверх
 			$wnd.google.visualization.events
 					.addListener(
 							tree,
 							'rollup',
-							function() {
-								$wnd.console.log("rollup");
-								parent.@org.tatasu.gwt.client.chart.treemapchart.TreeMapChart::fireEvent(Lcom/google/gwt/user/client/Event;Ljava/lang/String;)(event, 'rollup');
+							function(event) {
+								currentObject = event.row;
+								parent.@org.tatasu.gwt.client.chart.treemapchart.TreeMapChart::fireEvent(Lcom/google/gwt/user/client/Event;Ljava/lang/String;III)(event, 'rollup', event.row, myClientX, myClientY);
 							});
 			$wnd.google.visualization.events
 					.addListener(
 							tree,
 							'onmouseover',
-							function() {
-								$wnd.console.log("onmouseover");
-								parent.@org.tatasu.gwt.client.chart.treemapchart.TreeMapChart::fireEvent(Lcom/google/gwt/user/client/Event;Ljava/lang/String;)(event, 'onmouseover');
+							function(event) {	
+								currentObject = event.row;							
+								//parent.@org.tatasu.gwt.client.chart.treemapchart.TreeMapChart::fireEvent(Lcom/google/gwt/user/client/Event;Ljava/lang/String;III)(event, 'onmouseover', event.row, myClientX, myClientY);
 							});
 			$wnd.google.visualization.events
 					.addListener(
 							tree,
 							'onmouseout',
-							function() {
-								$wnd.console.log("onmouseout");
-								parent.@org.tatasu.gwt.client.chart.treemapchart.TreeMapChart::fireEvent(Lcom/google/gwt/user/client/Event;Ljava/lang/String;)(event, 'onmouseout');
+							function(event) {
+								currentObject = event.row;
+								parent.@org.tatasu.gwt.client.chart.treemapchart.TreeMapChart::fireEvent(Lcom/google/gwt/user/client/Event;Ljava/lang/String;III)(event, 'onmouseout', event.row, myClientX, myClientY);
 							});
 			$wnd.google.visualization.events
 					.addListener(
 							tree,
 							'select',
-							function() {
-								$wnd.console.log("select");
-								parent.@org.tatasu.gwt.client.chart.treemapchart.TreeMapChart::fireEvent(Lcom/google/gwt/user/client/Event;Ljava/lang/String;)(event, 'select');
+							function(event) {
+								parent.@org.tatasu.gwt.client.chart.treemapchart.TreeMapChart::fireEvent(Lcom/google/gwt/user/client/Event;Ljava/lang/String;III)(event, 'select', -1, myClientX, myClientY);
 							});
 
 			tree.draw(data, javaScriptObject);
@@ -207,10 +228,9 @@ public class TreeMapChart extends Widget {
 			$wnd.console.log(value);
 			var data = $wnd.google.visualization.arrayToDataTable(eval(value));			
 			tree.draw(data, javaScriptObject);
-			$wnd.alert(error);
 	}-*/;
 	/**
-	 * Преобразует тип установленные данные TreeMapChartOptions для данного
+	 * Преобразует тип установленных данных TreeMapChartOptions для данного
 	 * графика в javaScriptOptions
 	 * 
 	 * @return
@@ -306,7 +326,6 @@ public class TreeMapChart extends Widget {
 	}
 	/**
 	 * Нативный метод выборки глубины вложенности
-	 * 
 	 * @param tree
 	 *            Объект TreeMapChart
 	 * @return
@@ -323,7 +342,6 @@ public class TreeMapChart extends Widget {
 	}
 	/**
 	 * Нативный метод "на уровень вверх с последующей перерисовкой"
-	 * 
 	 * @param tree
 	 *            Объект дерева
 	 */
@@ -339,7 +357,6 @@ public class TreeMapChart extends Widget {
 	/************* Методы регистрации/разрегистрации слушателей *****************/
 	/**
 	 * Регистрация слушателя события "onMouseOver"
-	 * 
 	 * @param listener
 	 *            слушатель для регистрации
 	 */
@@ -348,7 +365,6 @@ public class TreeMapChart extends Widget {
 	}
 	/**
 	 * Разрегистрация слушателя события "onMouseOver"
-	 * 
 	 * @param listener
 	 *            слушатель для разрегистрации
 	 */
@@ -357,7 +373,6 @@ public class TreeMapChart extends Widget {
 	}
 	/**
 	 * Регистра слушателя соыбтия "onMouseOutListener"
-	 * 
 	 * @param listener
 	 */
 	public void addOnMouseOutListener(TreeMapChartOnMouseOutListener listener) {
@@ -365,7 +380,6 @@ public class TreeMapChart extends Widget {
 	}
 	/**
 	 * Разрегистра слушателя соыбтия "onMouseOutListener"
-	 * 
 	 * @param listener
 	 *            Слушатель
 	 */
@@ -374,7 +388,6 @@ public class TreeMapChart extends Widget {
 	}
 	/**
 	 * Регистрация слушателей события ready
-	 * 
 	 * @param listener
 	 *            Слушатель
 	 */
@@ -383,7 +396,6 @@ public class TreeMapChart extends Widget {
 	}
 	/**
 	 * Разрегистрация слушателей события ready
-	 * 
 	 * @param listener
 	 *            Слушатель
 	 */
@@ -392,7 +404,6 @@ public class TreeMapChart extends Widget {
 	}
 	/**
 	 * Регистрация слушателя события rollup
-	 * 
 	 * @param listener
 	 *            Слушатель
 	 */
@@ -401,7 +412,6 @@ public class TreeMapChart extends Widget {
 	}
 	/**
 	 * Разрегистрация события слуаштеля rollup
-	 * 
 	 * @param listener
 	 *            Слушатель
 	 */
@@ -410,7 +420,6 @@ public class TreeMapChart extends Widget {
 	}
 	/**
 	 * Регистрация слушателя события select
-	 * 
 	 * @param listener
 	 *            Слушатель
 	 */
@@ -419,12 +428,26 @@ public class TreeMapChart extends Widget {
 	}
 	/**
 	 * Разрегистрация слушателя события select
-	 * 
 	 * @param listener
 	 */
 	public void removeSelectListener(TreeMapChartSelectListener listener) {
 		selectListeners.add(listener);
 	}
+	/**
+	 * Регистрация слушателя события click
+	 * @param listener Слушатель
+	 */
+	public void addClickListener(TreeMapChartClickListener listener) {
+		clickListener.add(listener);
+	}
+	/**
+	 * Разрегистрация слушателя события click
+	 * @param listener
+	 */
+	public void removeClickListener(TreeMapChartClickListener listener) {
+		clickListener.remove(listener);
+	}
+	
 	/********************* Метод генерации событий ***************************/
 	/**
 	 * Метод генерации всех типов событий
@@ -434,8 +457,13 @@ public class TreeMapChart extends Widget {
 	 * @param eventType
 	 *            Тип события {@link TreeMapChartEventTypes}
 	 */
-	protected void fireEvent(Event event, String eventType) {
-		TreeMapChartEvent eventJ = new TreeMapChartEvent(event, this, eventType);
+	protected void fireEvent(Event event, String eventType, int rowId, int mouseXPosition, int mouseYPosition) {
+		TreeMapChartEvent eventJ;
+		if(rowId > -1) 
+			eventJ = new TreeMapChartEvent(event, this, eventType, rowId, mouseXPosition, mouseYPosition);
+		else 
+			eventJ = new TreeMapChartEvent(event, this, eventType, rowId, mouseXPosition, mouseYPosition);
+		
 		if (eventType.equals(TreeMapChartEventTypes.ON_MOUSE_OUT)) {
 			for (TreeMapChartOnMouseOutListener listener : onMouseOutListeners) {
 				listener.onMouseOut(eventJ);
@@ -457,5 +485,31 @@ public class TreeMapChart extends Widget {
 				listener.onSelect(eventJ);
 			}
 		}
+	}
+	/**
+	 * Генерация события  mouse click
+	 * @param event
+	 * @param eventType
+	 * @param rowId
+	 * @param mouseXPosition
+	 * @param mouseYPosition
+	 * @param buttonNumber
+	 * @param altkey
+	 * @param shiftKey
+	 */
+	protected void fireClickEvent(Event event, String eventType, int rowId, int mouseXPosition, int mouseYPosition, int buttonNumber, int altkey, int shiftKey) {
+		boolean altkeyB = (altkey == 1) ? true : false;
+		boolean shiftKeyB = (altkey == 1) ? true : false;
+		TreeMapChartMouseClickEvent eventJS = new TreeMapChartMouseClickEvent(event, this, eventType, rowId, mouseXPosition, mouseYPosition, buttonNumber, altkeyB, shiftKeyB);
+		for (TreeMapChartClickListener listener : clickListener) {
+			listener.onClick(eventJS);
+		}
+	}
+	public List<TreeMapChartData> getData() {
+		return data;
+	}
+	
+	public TreeMapChartOptions getOptions() {
+		return options;
 	}
 }

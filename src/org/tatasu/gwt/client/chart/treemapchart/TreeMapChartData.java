@@ -2,6 +2,10 @@ package org.tatasu.gwt.client.chart.treemapchart;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.sun.xml.internal.txw2.annotation.XmlElement;
+
 /**
  * Единица данных для графика TreeMapChart
  * 
@@ -13,9 +17,9 @@ public class TreeMapChartData implements Serializable {
 	/**	 */
 	private static final long	serialVersionUID	= 1L;
 	/** Наименование объекта */
-	private String				Name;
+	private String				name;
 	/** Родитель объекта (Будут объединены по родителю) */
-	private String				Parent;
+	private String				parent;
 	/** Размер на полотне графика */
 	private double				size;
 	/** Цвет на полотне графика */
@@ -25,22 +29,22 @@ public class TreeMapChartData implements Serializable {
 	public TreeMapChartData() {}
 	public TreeMapChartData(String name, String parent, double size, double color) {
 		super();
-		Name = name;
-		Parent = parent;
+		this.name = name;
+		this.parent = parent;
 		this.size = size;
 		this.color = color;
 	}
 	public String getName() {
-		return Name;
+		return name;
 	}
 	public void setName(String name) {
-		Name = name;
+		this.name = name;
 	}
 	public String getParent() {
-		return Parent;
+		return parent;
 	}
 	public void setParent(String parent) {
-		Parent = parent;
+		this.parent = parent;
 	}
 	public double getSize() {
 		return size;

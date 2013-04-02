@@ -1,11 +1,20 @@
 package org.tatasu.gwt.client.chart.treemapchart.options;
+
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.sun.xml.internal.txw2.annotation.XmlElement;
+
 /**
  * Класс с параметрами опций для графиков TreemapChart
  * @author HafizovAR
  *
  */
-public class TreeMapChartOptions {
+@XmlRootElement(namespace="org.tatasu.gwt.client.chart.treemapchart")
+public class TreeMapChartOptions implements Serializable {
 
+	private static final long	serialVersionUID	= 1329219431907343387L;
 	/**
 	 * Цвет секции заголовка для каждой ноды, соответствует формату html цветов.
 	 * #988f86
@@ -98,128 +107,181 @@ public class TreeMapChartOptions {
 	 */
 	private boolean	showScale				= false;
 	/** Whether or not to show tooltips. */
-	private boolean	showTooltips			= true;
+	private boolean	showTooltips			= false;
 	/** The text color. Specify an HTML color value. */
 	private String	fontColor				= "#ffffff";
 	/** The font family to use for all text. */
 	private String	fontFamily				= "auto";
 	/** The font size for all text, in points. */
 	private Integer	fontSize				= 12;
+	
+	public TreeMapChartOptions() {
+		
+	}
+	
+	
+	public TreeMapChartOptions(String headerColor, Integer headerHeight, String headerHighlightColor, String maxColor, Integer maxDepth,
+			String maxHighlightColor, Integer maxPostDepth, Integer maxColorValue, String midColor, String midHighlightColor, String minColor,
+			String minHighlightColor, Integer minColorValue, String noColor, String noHighlightColor, boolean showScale, boolean showTooltips,
+			String fontColor, String fontFamily, Integer fontSize) {
+		super();
+		this.headerColor = headerColor;
+		this.headerHeight = headerHeight;
+		this.headerHighlightColor = headerHighlightColor;
+		this.maxColor = maxColor;
+		this.maxDepth = maxDepth;
+		this.maxHighlightColor = maxHighlightColor;
+		this.maxPostDepth = maxPostDepth;
+		this.maxColorValue = maxColorValue;
+		this.midColor = midColor;
+		this.midHighlightColor = midHighlightColor;
+		this.minColor = minColor;
+		this.minHighlightColor = minHighlightColor;
+		this.minColorValue = minColorValue;
+		this.noColor = noColor;
+		this.noHighlightColor = noHighlightColor;
+		this.showScale = showScale;
+		this.showTooltips = showTooltips;
+		this.fontColor = fontColor;
+		this.fontFamily = fontFamily;
+		this.fontSize = fontSize;
+	}
 
+
+	@XmlElement
 	public String getHeaderColor() {
 		return headerColor;
 	}
 	public void setHeaderColor(String headerColor) {
 		this.headerColor = headerColor;
 	}
+	@XmlElement
 	public Integer getHeaderHeight() {
 		return headerHeight;
 	}
 	public void setHeaderHeight(Integer headerHeight) {
 		this.headerHeight = headerHeight;
 	}
+	@XmlElement
 	public String getHeaderHighlightColor() {
 		return headerHighlightColor;
 	}
 	public void setHeaderHighlightColor(String headerHighlightColor) {
 		this.headerHighlightColor = headerHighlightColor;
 	}
+	@XmlElement
 	public String getMaxColor() {
 		return maxColor;
 	}
 	public void setMaxColor(String maxColor) {
 		this.maxColor = maxColor;
 	}
+	@XmlElement
 	public Integer getMaxDepth() {
 		return maxDepth;
 	}
 	public void setMaxDepth(Integer maxDepth) {
 		this.maxDepth = maxDepth;
 	}
+	@XmlElement
 	public String getMaxHighlightColor() {
 		return maxHighlightColor;
 	}
 	public void setMaxHighlightColor(String maxHighlightColor) {
 		this.maxHighlightColor = maxHighlightColor;
 	}
+	@XmlElement
 	public Integer getMaxPostDepth() {
 		return maxPostDepth;
 	}
 	public void setMaxPostDepth(Integer maxPostDepth) {
 		this.maxPostDepth = maxPostDepth;
 	}
+	@XmlElement
 	public Integer getMaxColorValue() {
 		return maxColorValue;
 	}
 	public void setMaxColorValue(Integer maxColorValue) {
 		this.maxColorValue = maxColorValue;
 	}
+	@XmlElement
 	public String getMidColor() {
 		return midColor;
 	}
 	public void setMidColor(String midColor) {
 		this.midColor = midColor;
 	}
+	@XmlElement
 	public String getMidHighlightColor() {
 		return midHighlightColor;
 	}
 	public void setMidHighlightColor(String midHighlightColor) {
 		this.midHighlightColor = midHighlightColor;
 	}
+	@XmlElement
 	public String getMinColor() {
 		return minColor;
 	}
 	public void setMinColor(String minColor) {
 		this.minColor = minColor;
 	}
+	@XmlElement
 	public String getMinHighlightColor() {
 		return minHighlightColor;
 	}
 	public void setMinHighlightColor(String minHighlightColor) {
 		this.minHighlightColor = minHighlightColor;
 	}
+	@XmlElement
 	public Integer getMinColorValue() {
 		return minColorValue;
 	}
 	public void setMinColorValue(Integer minColorValue) {
 		this.minColorValue = minColorValue;
 	}
+	@XmlElement
 	public String getNoColor() {
 		return noColor;
 	}
 	public void setNoColor(String noColor) {
 		this.noColor = noColor;
 	}
+	@XmlElement
 	public String getNoHighlightColor() {
 		return noHighlightColor;
 	}
 	public void setNoHighlightColor(String noHighlightColor) {
 		this.noHighlightColor = noHighlightColor;
 	}
+	@XmlElement
 	public boolean isShowScale() {
 		return showScale;
 	}
 	public void setShowScale(boolean showScale) {
 		this.showScale = showScale;
 	}
+	@XmlElement
 	public boolean isShowTooltips() {
 		return showTooltips;
 	}
 	public void setShowTooltips(boolean showTooltips) {
 		this.showTooltips = showTooltips;
 	}
+	@XmlElement
 	public String getFontColor() {
 		return fontColor;
 	}
 	public void setFontColor(String fontColor) {
 		this.fontColor = fontColor;
 	}
+	@XmlElement
 	public String getFontFamily() {
 		return fontFamily;
 	}
 	public void setFontFamily(String fontFamily) {
 		this.fontFamily = fontFamily;
 	}
+	@XmlElement
 	public Integer getFontSize() {
 		return fontSize;
 	}
