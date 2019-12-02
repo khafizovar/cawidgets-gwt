@@ -1,2 +1,2 @@
 # cawidgets-gwt
-Библиотека виджетов для gwt. Миграция с bitbucket-mercurail посеяла комментарии коммитов(
+Widget Library for GWT. Migration from bitbucket-mercurial lost commit comments.
