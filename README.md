@@ -1,2 +1,3 @@
 # cawidgets-gwt
-Widget Library for GWT. Migration from bitbucket-mercurial lost commit comments.
+Library of widgets for GWT. Migrating from bitbucket-mercurial
+Comments lost during migration
